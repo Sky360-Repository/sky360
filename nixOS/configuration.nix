@@ -6,6 +6,7 @@
       ./Systems/rpi-4
       ./Systems/allskycamera.nix
       ./enviornment.nix
+      ./debugging.nix
       ./Users
     ];
 
