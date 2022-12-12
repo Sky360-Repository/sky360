@@ -7,9 +7,10 @@
     ];
 
   users.users.sky360 = {
-    initialPassword = "sky360";
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    home = "/home/sky360";
+    initialPassword = "sky360";
+    extraGroups = [ "networkmanager" "wheel" "video" "audio" "plugdev" "dialout" ];
     #packages = with pkgs; [
     #];
   };

@@ -5,7 +5,7 @@
     [
       ./enviornment.nix
       ./debugging.nix
-      ./Users
+      (./Users)
     ];
 
   programs.fish.enable = true;

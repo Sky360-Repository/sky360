@@ -7,6 +7,8 @@
     };
   };
   outputs = { self, nixpkgs, nixos-generators, ... }: {
+    # the installation media is also the installation target,
+    # so we don't want to provide the installation configuration.nix.
     packages = {
       aarch64 = {
         # tracker
@@ -27,7 +29,7 @@
             (Systems/Base)
             Systems/fisheye.nix
           ];
-          format = "sd-aarch64";
+          format = "sd-aarch64-installer";
         };
       };
       x86_64-linux = {
