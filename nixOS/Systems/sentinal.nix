@@ -1,8 +1,8 @@
 { config, pkgs, ... }:
 
 {
-  networking.hostName = "allskycamera";
+  networking.hostName = "sentinal";
   environment.systemPackages = with pkgs; [
-    indi-full
+
   ];
 }
