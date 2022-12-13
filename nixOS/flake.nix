@@ -8,6 +8,7 @@
   };
   outputs = { self, nixpkgs, nixos-generators, ... }: {
     # the installation media is also the installation target,
+
     # so we don't want to provide the installation configuration.nix.
     packages = {
       aarch64 = {
@@ -19,7 +20,8 @@
             (Systems/Base)
             Systems/sentinal.nix
           ];
-          format = "sd-aarch64-installer";
+          # arm64
+          format = "sd-aarch64";
         };
         # fish eye camera
         fisheye = nixos-generators.nixosGenerate {
@@ -29,6 +31,11 @@
             (Systems/Base)
             Systems/fisheye.nix
           ];
+          # rpi-4
+          sdImage = {
+            imageName = "sky360-fisheye-pi4.img";
+            compressImage = false;
+          };
           format = "sd-aarch64-installer";
         };
       };
@@ -44,13 +51,13 @@
         };
         # fish eye camera
         fisheye = nixos-generators.nixosGenerate {
-          system = "aarch64-linux";
+          system = "x86_65-linux";
           modules = [
-            Hardware/rpi-4.nix
+            #Hardware/rpi-4.nix
             (Systems/Base)
             Systems/sentinal.nix
           ];
-          format = "sd-aarch64";
+          format = "raw-efi";
         };
       };
     };
