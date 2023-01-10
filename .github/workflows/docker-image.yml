@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build Cyclop Docker image
-      run: docker build . --file Docker/cyclop/Dockerfile --tag sky360/cyclop:$(date +%s)
+      run: cd Docker/cyclop && docker build . --tag sky360/cyclop:$(date +%s)
