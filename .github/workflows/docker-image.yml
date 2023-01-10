@@ -11,12 +11,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    env:
-      #DOCKER_REGISTRY: kemansel.azurecr.io      
-      DOCKER_IMAGE: sky360/cyclop 
-      DOCKER_USER: ${{secrets.DOCKER_USER}} 
-      DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-      DOCKER_TARGET_PLATFORM: linux/arm/v7      
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
