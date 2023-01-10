@@ -11,17 +11,23 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    env:
+      #DOCKER_REGISTRY: kemansel.azurecr.io      
+      DOCKER_IMAGE: sky360/cyclop 
+      DOCKER_USER: ${{secrets.DOCKER_USER}} 
+      DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+      DOCKER_TARGET_PLATFORM: linux/arm/v7      
     steps:
-    - uses: actions/checkout@v2 
+    - uses: actions/checkout@v3 
     - name: docker login
-      env: 
-        DOCKER_USER: ${{secrets.DOCKER_USER}} 
-        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
       run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD 
     - name: Build the Docker image
-      run: docker build ./Docker/cyclop/ --tag sky360/cyclop:latest
+      run: |
+        echo ::set-output name=docker_platform::${DOCKER_TARGET_PLATFORM} 
+        echo ::set-output name=docker_image::${DOCKER_IMAGE}        
+        echo ::set-output name=version::${GITHUB_RUN_NUMBER}
+        docker build ./Docker/cyclop/ --tag ${DOCKER_IMAGE}:latest
     - name: Docker Push
-      run: docker push sky360/cyclop:latest
+      run: docker push ${DOCKER_IMAGE}:latest
     
     
