@@ -1,3 +1,5 @@
+# docker build --no-cache -f Dockerfile . -t sky360/cyclop:1.0.0
+
 FROM ubuntu:22.04
 
 RUN apt-get update && \
