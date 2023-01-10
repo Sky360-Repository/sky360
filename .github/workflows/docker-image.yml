@@ -23,10 +23,13 @@ jobs:
       run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD 
     - name: Build the Docker image
       run: |
-        echo ::set-output name=docker_platform::${DOCKER_TARGET_PLATFORM} 
-        echo ::set-output name=docker_image::${DOCKER_IMAGE}        
-        echo ::set-output name=version::${GITHUB_RUN_NUMBER}
-        docker build ./Docker/cyclop/ --tag ${DOCKER_IMAGE}:latest
+        docker build ./Docker/cyclop/ --tag ${DOCKER_IMAGE}:latest --
+        docker buildx build \        
+          --platform ${DOCKER_TARGET_PLATFORM} \
+          --tag ${DOCKER_IMAGE}:${GITHUB_RUN_NUMBER} \
+          --tag ${DOCKER_IMAGE}:latest
+          --output type=image,push=true ./Docker/cyclop
+        
     - name: Docker Push
       run: docker push ${DOCKER_IMAGE}:latest
     
