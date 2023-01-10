@@ -5,6 +5,7 @@
     [
       ./enviornment.nix
       ./debugging.nix
+      ./docker.nix
       (./Users)
     ];
 
