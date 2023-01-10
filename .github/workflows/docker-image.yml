@@ -37,5 +37,5 @@ jobs:
         context: "./Docker/cyclop"
         push: true
         tags: 
-          ${DOCKER_IMAGE}:latest 
-          ${DOCKER_IMAGE}:${GITHUB_RUN_NUMBER}
+          ${{ DOCKER_IMAGE }}:latest 
+          ${{ DOCKER_IMAGE }}:${{ GITHUB_RUN_NUMBER }}
