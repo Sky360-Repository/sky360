@@ -29,6 +29,7 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         context: "./Docker/cyclop"
+        platforms: linux/arm64
         push: true
         tags:
           sky360/cyclop:latest 
