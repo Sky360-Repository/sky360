@@ -7,13 +7,9 @@ This is the fisheye robotic part for the `qhy183` camera.
 ## requirements
 - docker 
 
-## run amd64 
+## run 
 ```bash
 docker run --privileged -it sky360/cyclop:latest
-```
-## run arm64
-```bash
-docker run --privileged -it --platform linux/arm64 sky360/cyclop:latest
 ```
 
 ## For development
