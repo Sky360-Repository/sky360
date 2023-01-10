@@ -22,6 +22,6 @@ jobs:
     - name: Build the Docker image
       run: docker build ./Docker/cyclop/ --tag sky360/cyclop:latest
     - name: Docker Push
-      run: docker push ${{secrets.DOCKER_USER}} sky360/cyclop:latest
+      run: docker push sky360/cyclop:latest
     
     
