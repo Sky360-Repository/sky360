@@ -13,6 +13,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build Cyclop Docker image
-      run: cd Docker/cyclop && docker build . --tag sky360/cyclop:$(date +%s)
+    - uses: actions/checkout@v2 
+    - name: docker login
+      env: 
+        DOCKER_USER: ${{secrets .DOCKER_USER}} 
+        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+      run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD 
+    - name: Build the Docker image
+      run: docker build ./Docker/cyclop/ --tag sky360/cyclop:latest
+    - name: Docker Push
+      run: docker push ${{secrets. DOCKER_USER}} /sky360
+    
+    
