@@ -32,10 +32,6 @@
             Systems/fisheye.nix
           ];
           # rpi-4
-          sdImage = {
-            imageName = "sky360-fisheye-pi4.img";
-            compressImage = false;
-          };
           format = "sd-aarch64-installer";
         };
       };
@@ -51,13 +47,13 @@
         };
         # fish eye camera
         fisheye = nixos-generators.nixosGenerate {
-          system = "x86_65-linux";
+          system = "x86_64-linux";
           modules = [
-            #Hardware/rpi-4.nix
+            #Hardware/x86_64.nix
             (Systems/Base)
-            Systems/sentinal.nix
+            Systems/fisheye.nix
           ];
-          format = "raw-efi";
+          format = "iso";
         };
       };
     };

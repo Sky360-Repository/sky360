@@ -3,7 +3,7 @@
 {
   sdImage = {
     imageName = "sky360-fisheye-pi4.img";
-    compressImage = false;
+    #compressImage = false;
   };
   networking.hostName = "fisheye";
   environment.systemPackages = with pkgs; [
