@@ -9,11 +9,12 @@ Feel free to suggest ideas and help vote on some.
 
 ## Installation (work in progress)
 
-### Cyclop - all sky camera
-- [NixOS](./nixOS)
-- [Docker](./docker/cyclop) 
+### Cyclop - all sky camera (fisheye)
+- [NixOS](./nixOS) - future...currently only basic rpi4 sd image. 
+- [Docker](./docker/cyclop) .... docker images provided for arm64 and amd64 cpu architecture.
 
-## Development team and repositories
+## Development team
+
 
 ## FAQ
 
