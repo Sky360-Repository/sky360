@@ -1,8 +1,11 @@
 # sky 360 Cyclop
 
-This is the fisheye robotic part for the `qhy183` camera.
+This is the fisheye robotic part docker images for the `qhy183` camera. this docker images support amd64 and arm64 cpu architecture.
 
-## QHY183 Camera requirement 
+## requirements
+- host ubuntu server + docker  (tested)
+
+### QHY183 Camera requirement 
 
 in order to use the QHY183 camera, the physical host requries to be patched. The docker image provides this patch. 
 The patch does the following on the physical host:
@@ -23,13 +26,10 @@ docker run \
 	-it sky360/cyclop:latest \
 	/bin/bash ./install_qhy_sdk_and_udev_rules_to_host.sh
 ```
-## requirements
-- docker 
-
 ## run 
 This will run the indi_server with the indi_qhy_ccd driver
 ```bash
-docker run --privileged -it sky360/cyclop:latest
+docker run --privileged -it sky360/cyclop:latest 
 ```
 
 ## For development
