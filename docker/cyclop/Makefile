@@ -4,6 +4,7 @@ run:
 	docker run \
 		--privileged \
 		-v /run/udev:/run/udev \
+		-p 7624:7624 \
 		-it \
 		sky360/cyclop:develop
 patch:

@@ -30,4 +30,7 @@ WORKDIR /home
 ADD ./install_qhy_sdk_and_udev_rules_to_host.sh /home 
 RUN chmod +x ./install_qhy_sdk_and_udev_rules_to_host.sh
 
+
+EXPOSE 7624
+
 CMD indiserver -v indi_qhy_ccd
