@@ -3,13 +3,14 @@ build::
 run:
 	docker run \
 		--privileged \
-		-v /run/udev:/run/udev \
 		-p 7624:7624 \
+		-v /run/udev:/run/udev \
 		-it \
 		sky360/cyclop:develop
 patch:
 	docker run \
 		--net=host \
+		-p 7624:7624 \
 		-v /bin/systemctl:/bin/systemctl \
 		-v /etc:/etc \
 		-v /lib:/lib \
@@ -22,6 +23,7 @@ patch:
 devel:
 	docker run \
 		--privileged \
+		-p 7624:7624 \
 		-v /run/udev:/run/udev \
 		-it \
 		sky360/cyclop:develop \
