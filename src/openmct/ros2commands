@@ -1,0 +1,11 @@
+source /opt/ros/humble/setup.bash
+
+-- 
+Check environment variables
+printenv | grep -i ROS
+
+ROS DOMAIN ID
+export ROS_DOMAIN_ID="100"
+
+If you only want everything to stay on your single computer, not use a network:
+export ROS_LOCALHOST_ONLY=1

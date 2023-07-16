@@ -1,0 +1,318 @@
+{
+    "name": "Sky360 Station",
+    "key": "station",
+    "measurements": [
+        {
+            "name": "Camera and PTZ",
+            "key": "camera.feed",
+            "values": [
+                {
+                    "key": "",
+                    "name": "Remove Graph and Add Camera Feeds Here. PTZ is not in Alpha Version.",
+                    "units": "",
+                    "format": "",
+                    "min": 0,
+                    "max": 100,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "",
+                    "source": "",
+                    "name": "",
+                    "format": "",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },     
+        {
+            "name": "Map",
+            "key": "map.feed",
+            "values": [
+                {
+                    "key": "",
+                    "name": "Add Map displaying data from Flight/ISS/Drone/Satellite/Weather/Astronomical/etc",
+                    "unit": "",
+                    "format": "",
+                    "min": 0,
+                    "max": 100,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "",
+                    "source": "",
+                    "name": "",
+                    "format": "",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },            
+        {
+            "name": "ADSB Flight Data",
+            "key": "prop.adsb",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Remove graph and add map",
+                    "units": "kilograms",
+                    "format": "float",
+                    "min": 0,
+                    "max": 100,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },   
+        {
+            "name": "OpenSky Flight API",
+            "key": "prop.opensky",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Remove graph and add map",
+                    "units": "kilograms",
+                    "format": "float",
+                    "min": 0,
+                    "max": 100,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },          
+        {
+            "name": "Satellite / ISS",
+            "key": "prop.satellite",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Remove graph and add map",
+                    "units": "kilograms",
+                    "format": "float",
+                    "min": 0,
+                    "max": 100,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },          
+        {
+            "name": "Satellite / ISS APIs",
+            "key": "prop.satelliteapi",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Remove graph and add map",
+                    "units": "kilograms",
+                    "format": "float",
+                    "min": 0,
+                    "max": 100,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },              
+        {
+            "name": "Wit-Motion",
+            "key": "prop.wit",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Graph data with 6 values over time",
+                    "units": "kilograms",
+                    "format": "float",
+                    "min": 0,
+                    "max": 100,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },            
+        {
+            "name": "Climate Controls",
+            "key": "pwr.v",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Temperature-Celsius Add a Graph for Humidity, etc also.",
+                    "unit": "Celsius",
+                    "format": "float",
+                    "min": 0,
+                    "max": 120,                    
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Weather API",
+            "key": "prop.weather",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Remove graph data and add map",
+                    "units": "kilograms",
+                    "format": "float",
+                    "min": 0,
+                    "max": 100,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Sound / Microphone",
+            "key": "prop.sound",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "kilograms",
+                    "format": "float",
+                    "min": 0,
+                    "max": 100,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },        
+        {
+            "name": "Madar EMF",
+            "key": "prop.madar",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "kilograms",
+                    "format": "float",
+                    "min": 0,
+                    "max": 100,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },             
+        {
+            "name": "SDR",
+            "key": "prop.sdr",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "kilograms",
+                    "format": "float",
+                    "min": 0,
+                    "max": 100,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        }           
+    ]
+}

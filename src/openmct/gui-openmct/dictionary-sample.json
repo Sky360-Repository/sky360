@@ -1,0 +1,30 @@
+{
+    "name": "Example Spacecraft",
+    "key": "sc",
+    "measurements": [
+        {
+            "name": "Generator Voltage",
+            "key": "pwr.v",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "Volts",
+                    "format": "float",
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        }
+    ]
+}

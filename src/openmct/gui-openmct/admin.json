@@ -1,0 +1,89 @@
+{
+    "name": "Administration",
+    "key": "ad",
+    "measurements": [
+        {
+            "name": "Station Owner Information",
+            "key": "camera.feed",
+            "values": [
+                {
+                    "key": "",
+                    "name": "User Name",
+                    "email": "User Email",
+                    "station_ID": "Station ID",
+                    "min": 0,
+                    "max": 100,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "",
+                    "source": "",
+                    "name": "",
+                    "format": "",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },                                          
+        {
+            "name": "Hardware and Online APIs",
+            "key": "prop.stationhardsoftware",
+            "values": [
+                {
+                    "key": "value",
+                    "witmotion": "Wit-Motion",
+                    "gps": "GPS",
+                    "online-googlegps": "Google GPS",
+                    "adsb": "ADSB etc",
+                    "online-opensky": "Open Sky API",
+                    "climatecontrol": "Climate Controls",
+                    "online-weather": "Online Weather",
+                    "online-satellite-iss": "Online Satellite and ISS",
+                    "min": 0,
+                    "max": 100,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },            
+        {
+            "name": "User Interface Style",
+            "key": "prop.style",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "User Interface Design Colors",
+                    "units": "kilograms",
+                    "format": "float",
+                    "min": 0,
+                    "max": 100,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        }           
+    ]
+}

@@ -1,0 +1,185 @@
+{
+    "name": "Tracker/Station Logs",
+    "key": "ad",
+    "measurements": [
+        {
+            "name": "User Information",
+            "key": "prop.userinformation",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "kilograms",
+                    "format": "float",
+                    "min": 0,
+                    "max": 100,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Select Hardware",
+            "key": "prop.hardware",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "format": "enum",
+                    "enumerations": [
+                        {
+                            "string": "ON",
+                            "value": 1
+                        },
+                        {
+                            "string": "OFF",
+                            "value": 0
+                        }
+                    ],
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Select Online APIs",
+            "key": "comms.onlineapis",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "bytes",
+                    "format": "integer",
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Enter API Keys",
+            "key": "comms.apikeys",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "bytes",
+                    "format": "integer",
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Enter Longitude / Latitude (Optional)",
+            "key": "pwr.placeholdera",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "℃",
+                    "format": "float",
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Placeholder B",
+            "key": "pwr.placeholderb",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "Amps",
+                    "format": "float",
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Placeholder C",
+            "key": "pwr.placeholderc",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "Volts",
+                    "format": "float",
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        }
+    ]
+}
