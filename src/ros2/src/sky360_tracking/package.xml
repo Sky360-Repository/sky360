@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="2">
+    <name>sky360_tracking</name>
+    <version>0.0.1</version>
+    <description>ROS2 Node for managing the tracking of the objects from the camera</description>
+    <maintainer email="you@example.com">Your Name</maintainer>
+    <license>MIT</license>
+
+    <buildtool_depend>ament_cmake</buildtool_depend>
+
+    <depend>rclcpp</depend>
+    <depend>sensor_msgs</depend>
+    <depend>vision_msgs</depend>
+    <depend>cv_bridge</depend>
+    <depend>rcl_interfaces</depend>
+    <depend>OpenCV</depend>
+    <depend>message_filters</depend>
+    <depend>sky360_interfaces</depend>
+    <depend>sky360_image_processing</depend>
+
+    <export>
+        <build_type>ament_cmake</build_type>
+    </export>
+</package>

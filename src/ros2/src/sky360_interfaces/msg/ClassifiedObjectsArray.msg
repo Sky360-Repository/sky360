@@ -1,0 +1,2 @@
+# ClassifiedObjectsArray.msg
+ObjectClassification[] classified_objects_array

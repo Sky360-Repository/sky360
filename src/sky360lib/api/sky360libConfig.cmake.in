@@ -1,0 +1,6 @@
+include(CMakeFindDependencyMacro)
+
+# here you can set dependencies on other libraries
+# find_dependency(Boost 1.65 COMPONENTS system filesystem)
+
+include("${CMAKE_CURRENT_LIST_DIR}/sky360libTargets.cmake")

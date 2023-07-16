@@ -1,0 +1,17 @@
+std_msgs/Header header
+AreaLimits roi
+uint32 bpp
+uint32 bayer_format
+uint32 exposure
+uint32 gain
+uint32 offset
+std_msgs/ColorRGBA white_balance
+float64 contrast
+float64 brightness
+float64 gamma
+uint32 channels
+uint32 bin_mode
+bool cool_enabled
+float64 target_temp
+float64 current_temp
+bool auto_exposure

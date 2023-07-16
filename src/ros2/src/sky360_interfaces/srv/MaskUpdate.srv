@@ -1,0 +1,6 @@
+string mask_type
+string file_name
+sensor_msgs/Image mask
+---
+bool success
+string message # information, e.g. error message

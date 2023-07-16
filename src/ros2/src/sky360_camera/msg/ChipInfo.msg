@@ -1,0 +1,7 @@
+float64 width_mm
+float64 height_mm
+float64 pixel_width_um
+float64 pixel_height_um
+uint32 max_image_width
+uint32 max_image_height
+uint32 max_bpp
