@@ -26,16 +26,7 @@ If you encounter a bug or have a feature request related to either the ROS2 back
 TBD
 
 ## Contributing to Sky360.org
-
-contribute.md
-
-We appreciate your interest in contributing to the development of Sky360.org! By contributing, you can help improve the system, add new features, and make it more robust in observing and detecting UAP. 
-
-
-This guide outlines the steps to contribute effectively.
-
-- how to create a new ROS2 node. 
-  - C++
+Please take a look at our [contribute.md](./contribute.md)
 
 ## System Architecture
 The Sky360.org system follows a modular architecture, allowing different components to communicate and work together seamlessly. The primary components of the system include:
