@@ -71,13 +71,17 @@ We appreciate your contributions and thank you for your support in advancing the
 git clone https://github.com/sky360-repository/sky360.git
 
 cd sky360
-
-code .
 ```
 
 ## Guidelines
 
 - ROS2 (backend)
+  ```bash
+  cd src/ros2
+  code .
+  ```
+  Then open the folder in dev. container. (Dev Containers: Open Folder in Container... command from the Command Palette or quick actions Status bar item)
+
 - OpenMCT (frontend)
 
 ## ROS2 (backend) 
