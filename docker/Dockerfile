@@ -254,6 +254,6 @@ WORKDIR /opt/ros2_ws
 RUN mkdir -p /opt/ros2_ws/src \
    && git clone https://github.com/ros-perception/vision_opencv.git \
    && rosdep update \
-   && rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -y --allow-overriding cv_bridge \
-   && colcon build
+   && rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -y \
+   && colcon build --allow-overriding cv_bridge
 ENV DEBIAN_FRONTEND=
