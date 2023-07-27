@@ -5,7 +5,7 @@
 
 namespace sky360lib::utils
 {
-    class SubSampler 
+    class SubSampler
     {
     public:
         SubSampler(int n, int m)
@@ -14,12 +14,31 @@ namespace sky360lib::utils
         template <typename T>
         void subSampleImpl(const cv::Mat& input, cv::Mat& output)
         {
+            const double step_row = static_cast<double>(input.rows) / output.rows;
+            const double step_col = static_cast<double>(input.cols) / output.cols;
+
             for (int i = 0; i < output.rows; ++i)
             {
                 for (int j = 0; j < output.cols; ++j)
                 {
-                    const int row = i * m_m;
-                    const int col = j * m_n;
+                    const int row = static_cast<int>(i * step_row);
+                    const int col = static_cast<int>(j * step_col);
+                    output.at<T>(i, j) = input.at<T>(row, col);
+                }
+            }
+        }
+
+        template <typename T>
+        void subSampleImplRand(const cv::Mat& input, cv::Mat& output)
+        {
+            const int rows = input.rows;
+            const int cols = input.cols;
+            for (int i = 0; i < output.rows; ++i)
+            {
+                for (int j = 0; j < output.cols; ++j)
+                {
+                    const int row = m_random.uniform(0, rows);
+                    const int col = m_random.uniform(0, cols);
                     output.at<T>(i, j) = input.at<T>(row, col);
                 }
             }
@@ -27,10 +46,7 @@ namespace sky360lib::utils
 
         cv::Mat subSample(const cv::Mat& image)
         {
-            const int rows = image.rows;
-            const int cols = image.cols;
-
-            cv::Mat subSampled(rows / m_m, cols / m_n, image.type());
+            cv::Mat subSampled(m_m, m_n, image.type());
 
             if (image.channels() == 1) // Grayscale image
             {
@@ -75,6 +91,7 @@ namespace sky360lib::utils
         }
 
     private:
+        cv::RNG m_random;
         int m_n;
         int m_m;
     };
