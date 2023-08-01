@@ -32,6 +32,8 @@ public:
         pub_qos_profile.history(rclcpp::HistoryPolicy::KeepLast);
 
         image_subscription_ = create_subscription<sensor_msgs::msg::Image>("sky360/camera/all_sky/bayer", sub_qos_profile, std::bind(&BackgroundSubtractor::imageCallback, this, std::placeholders::_1));
+        auto can_loan_ = image_subscription_->can_loan_messages();
+        RCLCPP_INFO(get_logger(), "Can loan: %d", can_loan_);
 
         image_publisher_ = create_publisher<sensor_msgs::msg::Image>("sky360/frames/all_sky/foreground_mask", pub_qos_profile);
         detection_publisher_ = create_publisher<vision_msgs::msg::BoundingBox2DArray>("sky360/detector/all_sky/bounding_boxes", pub_qos_profile);

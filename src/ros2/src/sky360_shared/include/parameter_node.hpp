@@ -11,7 +11,7 @@ class ParameterNode
 {
 public:
     ParameterNode(const std::string &node_name)
-        : Node(node_name)
+        : Node(node_name, *default_options())
         , enable_profiling_(false)
     {
         declare_parameters();
@@ -53,6 +53,14 @@ protected:
         }
         set_parameters_callback(parameters);
         return result;
+    }
+
+    static std::shared_ptr<rclcpp::NodeOptions> default_options()
+    {
+        auto options = std::make_shared<rclcpp::NodeOptions>();
+        options->use_intra_process_comms(true);
+
+        return options;
     }
 
     bool enable_profiling_;
