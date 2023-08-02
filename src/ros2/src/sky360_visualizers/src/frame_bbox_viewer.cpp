@@ -15,6 +15,7 @@
 #include "annotated_frame_creator.hpp"
 
 #include "parameter_node.hpp"
+#include "image_utils.hpp"
 
 class FrameBBoxViewer
     : public ParameterNode
@@ -73,15 +74,16 @@ private:
                 profiler_.start("Frame");
             }
 
-            cv::Mat frame = cv_bridge::toCvShare(image_msg, image_msg->encoding)->image;
+            cv::Mat debayered_img;
+            ImageUtils::convert_image_msg(image_msg, debayered_img);
 
             for (const auto &bbox2D : bbox_msg->boxes)
             {
                 auto bbox = cv::Rect(bbox2D.center.position.x - bbox2D.size_x / 2, bbox2D.center.position.y - bbox2D.size_y / 2, bbox2D.size_x, bbox2D.size_y);
-                cv::rectangle(frame, bbox, cv::Scalar(255, 0, 255), 5, 1);
+                cv::rectangle(debayered_img, bbox, cv::Scalar(255, 0, 255), 5, 1);
             }
 
-            cv::imshow("Image Viewer", frame);
+            cv::imshow("Image Viewer", debayered_img);
             int key = cv::waitKey(1);
             bool topic_change = false;
             switch (key)

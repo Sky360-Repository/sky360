@@ -13,6 +13,7 @@
 #include <sky360lib/api/utils/profiler.hpp>
 
 #include "parameter_node.hpp"
+#include "image_utils.hpp"
 
 class FrameProvider 
     : public ParameterNode
@@ -68,7 +69,7 @@ private:
             if (!bayer_img_bridge->image.empty())
             {
                 cv::Mat debayered_img;
-                debayer_image(bayer_img_bridge->image, debayered_img, pattern);
+                ImageUtils::debayer_image(bayer_img_bridge->image, debayered_img, pattern);
 
                 cv::Mat the_img;
                 if (false) // Resize frame
@@ -103,40 +104,6 @@ private:
         catch (cv_bridge::Exception &e)
         {
             RCLCPP_ERROR(this->get_logger(), "CV bridge exception: %s", e.what());
-        }
-    }
-
-    static inline int convert_bayer_pattern(const std::string& _bayerFormat)
-    {
-        if (_bayerFormat == sky360_camera::msg::BayerFormat::BAYER_GB)
-        {
-            return cv::COLOR_BayerGR2BGR; //!< equivalent to GBRG Bayer pattern
-        }
-        else if (_bayerFormat == sky360_camera::msg::BayerFormat::BAYER_GR)
-        {
-            return cv::COLOR_BayerGB2BGR; //!< equivalent to GRBG Bayer pattern
-        }
-        else if (_bayerFormat == sky360_camera::msg::BayerFormat::BAYER_BG)
-        {
-            return cv::COLOR_BayerRG2BGR; //!< equivalent to GRBG Bayer pattern
-        }
-        else if (_bayerFormat == sky360_camera::msg::BayerFormat::BAYER_RG)
-        {
-            return cv::COLOR_BayerBG2BGR; //!< equivalent to GRBG Bayer pattern
-        }
-        return cv::COLOR_BayerGR2BGR;
-    }
-
-    void debayer_image(const cv::Mat &_image_in, cv::Mat &_image_out, const std::string& _bayerFormatStr) const
-    {
-        if (_bayerFormatStr != sensor_msgs::image_encodings::BGR8 
-            && _bayerFormatStr != sensor_msgs::image_encodings::MONO8)
-        {
-            cv::cvtColor(_image_in, _image_out, convert_bayer_pattern(_bayerFormatStr));
-        }
-        else
-        {
-            _image_out = _image_in;
         }
     }
 
