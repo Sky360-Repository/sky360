@@ -35,9 +35,6 @@ public:
         image_publisher_ = create_publisher<sensor_msgs::msg::Image>("sky360/camera/all_sky/bayer", qos_profile);
         image_info_publisher_ = create_publisher<sky360_camera::msg::ImageInfo>("sky360/camera/all_sky/image_info", qos_profile);
         camera_info_publisher_ = create_publisher<sky360_camera::msg::CameraInfo>("sky360/camera/all_sky/camera_info", qos_profile);
-        auto can_loan_ = image_publisher_->can_loan_messages();
-        auto can_borrow_ = image_publisher_->borrow_loaned_message();
-        RCLCPP_INFO(get_logger(), "Can loan: %d, borrow: %d", can_loan_, can_borrow_.is_valid());
         
         declare_parameters();
     }
@@ -61,8 +58,6 @@ public:
                 video_capture_.set(cv::CAP_PROP_POS_FRAMES, 0); // if video ends, loop back to start
                 video_capture_.read(image);
             }
-
-            //cv::cvtColor(image, image, cv::COLOR_BGR2GRAY);
 
             if (false)
             {
