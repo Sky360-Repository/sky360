@@ -42,7 +42,7 @@ def generate_launch_description():
         #     executable='frame_viewer_node',
         #     name='frame_viewer_node',
         #     output='screen',
-        #     parameters=[{'enable_profiling': False}, {"topics": ["sky360/frames/all_sky/masked", "sky360/frames/all_sky/foreground_mask"]}]
+        #     parameters=[{'enable_profiling': False}, {"topics": ["sky360/camera/all_sky/bayer", "sky360/frames/all_sky/foreground_mask"]}]
         # ),
         Node(
             package='sky360_visualizers',

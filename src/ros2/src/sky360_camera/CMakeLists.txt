@@ -31,7 +31,6 @@ include_directories("../sky360_shared/include")
 
 set(msg_files
     "msg/AreaLimits.msg"
-    "msg/BayerFormat.msg"
     "msg/CameraInfo.msg"
     "msg/ChipInfo.msg"
     "msg/ImageInfo.msg"

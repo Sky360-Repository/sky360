@@ -9,11 +9,11 @@
 #include <cv_bridge/cv_bridge.hpp>
 
 #include <sensor_msgs/msg/image.hpp>
+#include <sensor_msgs/image_encodings.hpp>
 #include <rcl_interfaces/msg/parameter_event.hpp>
 
 #include "sky360_camera/msg/image_info.hpp"
 #include "sky360_camera/msg/camera_info.hpp"
-#include "sky360_camera/msg/bayer_format.hpp"
 
 #include <sky360lib/api/camera/qhy_camera.hpp>
 #include <sky360lib/api/utils/auto_exposure.hpp>
@@ -30,7 +30,7 @@ public:
     AllSkyPublisher()
         : ParameterNode("all_sky_image_publisher_node")
     {
-        rclcpp::QoS qos_profile(5); // The depth of the publisher queue
+        rclcpp::QoS qos_profile(2); // The depth of the publisher queue
         qos_profile.reliability(rclcpp::ReliabilityPolicy::BestEffort);
         qos_profile.durability(rclcpp::DurabilityPolicy::Volatile);
         qos_profile.history(rclcpp::HistoryPolicy::KeepLast);
@@ -175,13 +175,13 @@ protected:
         switch (_bayerFormat)
         {
         case sky360lib::camera::QhyCamera::BayerFormat::BayerGB:
-            return sky360_camera::msg::BayerFormat::BAYER_GB;
+            return sensor_msgs::image_encodings::BAYER_GBRG8;
         case sky360lib::camera::QhyCamera::BayerFormat::BayerGR:
-            return sky360_camera::msg::BayerFormat::BAYER_GR;
+            return sensor_msgs::image_encodings::BAYER_GRBG8;
         case sky360lib::camera::QhyCamera::BayerFormat::BayerBG:
-            return sky360_camera::msg::BayerFormat::BAYER_BG;
+            return sensor_msgs::image_encodings::BAYER_BGGR8;
         case sky360lib::camera::QhyCamera::BayerFormat::BayerRG:
-            return sky360_camera::msg::BayerFormat::BAYER_RG;
+            return sensor_msgs::image_encodings::BAYER_RGGB8;
         default:
             return sensor_msgs::image_encodings::MONO8;
         }
