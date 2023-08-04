@@ -13,7 +13,6 @@
 
 #include "sky360_camera/msg/image_info.hpp"
 #include "sky360_camera/msg/camera_info.hpp"
-#include "sky360_camera/msg/bayer_format.hpp"
 
 #include "parameter_node.hpp"
 
