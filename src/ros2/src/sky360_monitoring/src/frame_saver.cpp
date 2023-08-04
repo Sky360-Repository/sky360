@@ -10,6 +10,7 @@
 #include "sky360_camera/msg/camera_info.hpp"
 
 #include <sky360lib/api/utils/profiler.hpp>
+#include <sky360lib/api/utils/ringbuf.h>
 
 #include "parameter_node.hpp"
 #include "image_utils.hpp"
@@ -26,7 +27,10 @@ public:
     }
     
 private:
+    static const unsigned long NUMBER_OF_IMAGES_TO_STORE = 20 * 5;
+
     rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr image_subscription_;
+    baudvine::RingBuf<cv::Mat, NUMBER_OF_IMAGES_TO_STORE> image_buffer_;
 
     FrameSaver() 
         : ParameterNode("frame_saver_node")
@@ -57,7 +61,7 @@ private:
             cv::Mat debayered_img;
             ImageUtils::convert_image_msg(image_msg, debayered_img);
 
-            // TODO: Put images in the cyclic 
+            image_buffer_.push_back(debayered_img);
         }
         catch (cv_bridge::Exception &e)
         {
