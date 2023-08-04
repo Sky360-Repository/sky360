@@ -49,6 +49,6 @@ def generate_launch_description():
             executable='frame_bbox_viewer_node',
             name='frame_bbox_viewer_node',
             output='screen',
-            parameters=[{'enable_profiling': False}, {"topics": ["sky360/camera/all_sky/bayer", "sky360/frames/all_sky/foreground_mask"]}]
+            parameters=[{"topics": ["sky360/camera/all_sky/bayer", "sky360/frames/all_sky/foreground_mask"]}]
         ),
     ])

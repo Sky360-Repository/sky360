@@ -15,6 +15,6 @@ def generate_launch_description():
             executable='frame_viewer_node',
             name='frame_viewer_node',
             output='screen',
-            parameters=[{'enable_profiling': False}, {"topics": ["sky360/camera/all_sky/bayer"]}]
+            parameters=[{"topics": ["sky360/camera/all_sky/bayer"]}]
         ),
     ])
