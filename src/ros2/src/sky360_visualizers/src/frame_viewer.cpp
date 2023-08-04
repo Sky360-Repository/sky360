@@ -14,6 +14,7 @@
 #include "annotated_frame_creator.hpp"
 
 #include "parameter_node.hpp"
+#include "image_utils.hpp"
 
 class FrameViewer
     : public ParameterNode
@@ -60,7 +61,7 @@ private:
         cv::displayStatusBar("Image Viewer", topics_[current_topic_], 0);
     }
 
-    void imageCallback(const sensor_msgs::msg::Image::SharedPtr masked_image_msg)
+    void imageCallback(const sensor_msgs::msg::Image::SharedPtr image_msg)
     {
         try
         {
@@ -69,8 +70,10 @@ private:
                 profiler_.start("Frame");
             }
 
-            cv::Mat frame = cv_bridge::toCvShare(masked_image_msg)->image;
-            cv::imshow("Image Viewer", frame);
+            cv::Mat debayered_img;
+            ImageUtils::convert_image_msg(image_msg, debayered_img);
+
+            cv::imshow("Image Viewer", debayered_img);
             int key = cv::waitKey(1);
             bool topic_change = false;
             switch (key)
@@ -104,7 +107,7 @@ private:
         }
     }
 
-    rclcpp::QoS sub_qos_profile_{10};
+    rclcpp::QoS sub_qos_profile_{2};
     rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr image_subscription_;
     sky360lib::utils::Profiler profiler_;
     std::vector<std::string> topics_;

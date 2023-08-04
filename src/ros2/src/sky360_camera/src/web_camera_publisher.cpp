@@ -35,7 +35,7 @@ public:
         image_publisher_ = create_publisher<sensor_msgs::msg::Image>("sky360/camera/all_sky/bayer", qos_profile);
         image_info_publisher_ = create_publisher<sky360_camera::msg::ImageInfo>("sky360/camera/all_sky/image_info", qos_profile);
         camera_info_publisher_ = create_publisher<sky360_camera::msg::CameraInfo>("sky360/camera/all_sky/camera_info", qos_profile);
-
+        
         declare_parameters();
     }
 
@@ -62,7 +62,7 @@ public:
             if (false)
             {
                 double aspect_ratio = (double)image.size().width / (double)image.size().height;
-                uint32_t frame_height = 1280;
+                uint32_t frame_height = 2000;
                 uint32_t frame_width = (uint32_t)(aspect_ratio * (double)frame_height);
                 cv::resize(image, image, cv::Size(frame_width, frame_height));
             }
