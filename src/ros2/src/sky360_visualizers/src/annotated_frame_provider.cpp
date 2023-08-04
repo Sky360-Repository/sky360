@@ -20,29 +20,33 @@ class AnnotatedFrameProvider
     : public ParameterNode
 {
 public:
-    static std::shared_ptr<AnnotatedFrameProvider> Create()
+    static std::shared_ptr<AnnotatedFrameProvider> create()
     {
         auto result = std::shared_ptr<AnnotatedFrameProvider>(new AnnotatedFrameProvider());
         result->init();
         return result;
     }
 
-protected:
-    void set_parameters_callback(const std::vector<rclcpp::Parameter> &params) override
-    {
-        (void)params;
-    }
-
-    void declare_parameters() override
-    {
-    }
-
 private:
+    std::shared_ptr<message_filters::Subscriber<sensor_msgs::msg::Image>> sub_masked_frame;
+    std::shared_ptr<message_filters::Subscriber<sky360_interfaces::msg::TrackingState>> sub_tracking_state;
+    std::shared_ptr<message_filters::Subscriber<sky360_interfaces::msg::TrackDetectionArray>> sub_tracker_detections;
+    std::shared_ptr<message_filters::Subscriber<sky360_interfaces::msg::TrackTrajectoryArray>> sub_tracker_trajectory;
+    std::shared_ptr<message_filters::Subscriber<sky360_interfaces::msg::TrackTrajectoryArray>> sub_tracker_prediction;
+
+    std::shared_ptr<message_filters::TimeSynchronizer<sensor_msgs::msg::Image, sky360_interfaces::msg::TrackingState, sky360_interfaces::msg::TrackDetectionArray, sky360_interfaces::msg::TrackTrajectoryArray, sky360_interfaces::msg::TrackTrajectoryArray>> time_synchronizer_;
+
+    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr pub_annotated_frame_;
+
+    AnnotatedFrameCreator annotated_frame_creator_;
+    sky360lib::utils::Profiler profiler_;
+
+    friend std::shared_ptr<AnnotatedFrameProvider> std::make_shared<AnnotatedFrameProvider>();
+
     AnnotatedFrameProvider() 
         : ParameterNode("annotated_frame_provider_node")
         , annotated_frame_creator_(std::map<std::string, std::string>())
     {
-        declare_parameters();
     }
 
     void init()
@@ -68,28 +72,12 @@ private:
     {
         try
         {
-            if (enable_profiling_)
-            {
-                profiler_.start("Frame");
-            }
-
             auto masked_img_bridge = cv_bridge::toCvShare(masked_image_msg);
 
             auto annotated_frame = annotated_frame_creator_.create_frame(masked_img_bridge->image, *tracking_state_msg, *detections_msg, *trajectory_msg, *prediction_msg);
 
             auto annotated_frame_msg = cv_bridge::CvImage(masked_image_msg->header, sensor_msgs::image_encodings::BGR8, annotated_frame).toImageMsg();
             pub_annotated_frame_->publish(*annotated_frame_msg);
-
-            if (enable_profiling_)
-            {
-                profiler_.stop("Frame");
-                if (profiler_.get_data("Frame").duration_in_seconds() > 1.0)
-                {
-                    auto report = profiler_.report();
-                    RCLCPP_INFO(get_logger(), report.c_str());
-                    profiler_.reset();
-                }
-            }
         }
         catch (cv_bridge::Exception &e)
         {
@@ -97,27 +85,16 @@ private:
         }
     }
 
-    std::shared_ptr<message_filters::Subscriber<sensor_msgs::msg::Image>> sub_masked_frame;
-    std::shared_ptr<message_filters::Subscriber<sky360_interfaces::msg::TrackingState>> sub_tracking_state;
-    std::shared_ptr<message_filters::Subscriber<sky360_interfaces::msg::TrackDetectionArray>> sub_tracker_detections;
-    std::shared_ptr<message_filters::Subscriber<sky360_interfaces::msg::TrackTrajectoryArray>> sub_tracker_trajectory;
-    std::shared_ptr<message_filters::Subscriber<sky360_interfaces::msg::TrackTrajectoryArray>> sub_tracker_prediction;
-
-    std::shared_ptr<message_filters::TimeSynchronizer<sensor_msgs::msg::Image, sky360_interfaces::msg::TrackingState, sky360_interfaces::msg::TrackDetectionArray, sky360_interfaces::msg::TrackTrajectoryArray, sky360_interfaces::msg::TrackTrajectoryArray>> time_synchronizer_;
-
-    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr pub_annotated_frame_;
-
-    AnnotatedFrameCreator annotated_frame_creator_;
-    sky360lib::utils::Profiler profiler_;
-
-    friend std::shared_ptr<AnnotatedFrameProvider> std::make_shared<AnnotatedFrameProvider>();
+    void set_parameters_callback(const std::vector<rclcpp::Parameter> &params) override
+    {
+        (void)params;
+    }
 };
 
 int main(int argc, char **argv)
 {
     rclcpp::init(argc, argv);
-    auto annotatedFrameProvider = AnnotatedFrameProvider::Create();
-    rclcpp::spin(annotatedFrameProvider);
+    rclcpp::spin(AnnotatedFrameProvider::create());
     rclcpp::shutdown();
     return 0;
 }

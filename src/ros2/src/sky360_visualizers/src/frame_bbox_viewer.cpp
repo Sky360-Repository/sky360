@@ -21,31 +21,29 @@ class FrameBBoxViewer
     : public ParameterNode
 {
 public:
-    static std::shared_ptr<FrameBBoxViewer> Create()
+    static std::shared_ptr<FrameBBoxViewer> create()
     {
         auto result = std::shared_ptr<FrameBBoxViewer>(new FrameBBoxViewer());
         result->init();
         return result;
     }
 
-protected:
-    void set_parameters_callback(const std::vector<rclcpp::Parameter> &params) override
-    {
-        (void)params;
-    }
-
-    void declare_parameters() override
-    {
-        declare_parameter<std::vector<std::string>>("topics", {"sky360/frames/all_sky/masked", "sky360/frames/all_sky/foreground_mask"});
-
-        get_parameter("topics", topics_);
-    }
-
 private:
+    rclcpp::QoS sub_qos_profile_{2};
+    message_filters::Subscriber<sensor_msgs::msg::Image> sub_image_;
+    message_filters::Subscriber<vision_msgs::msg::BoundingBox2DArray> sub_bbox_;
+    std::shared_ptr<message_filters::TimeSynchronizer<sensor_msgs::msg::Image, vision_msgs::msg::BoundingBox2DArray>> time_synchronizer_;
+
+    sky360lib::utils::Profiler profiler_;
+    std::vector<std::string> topics_;
+    int current_topic_;
+
+    friend std::shared_ptr<FrameBBoxViewer> std::make_shared<FrameBBoxViewer>();
+
     FrameBBoxViewer()
         : ParameterNode("frame_bbox_viewer_node"), current_topic_{0}
     {
-        declare_parameters();
+        declare_node_parameters();
     }
 
     void init()
@@ -65,15 +63,26 @@ private:
         cv::displayStatusBar("Image Viewer", topics_[current_topic_], 0);
     }
 
+    void set_parameters_callback(const std::vector<rclcpp::Parameter> &params) override
+    {
+        for (auto &param : params)
+        {
+            if (param.get_name() == "topics")
+            {
+                topics_ = param.as_string_array();
+            }
+        }
+    }
+
+    void declare_node_parameters()
+    {
+        declare_parameter<std::vector<std::string>>("topics", {"sky360/camera/all_sky/bayer", "sky360/frames/all_sky/foreground_mask"});
+    }
+
     void imageCallback(const sensor_msgs::msg::Image::SharedPtr &image_msg, const vision_msgs::msg::BoundingBox2DArray::SharedPtr &bbox_msg)
     {
         try
         {
-            if (enable_profiling_)
-            {
-                profiler_.start("Frame");
-            }
-
             cv::Mat debayered_img;
             ImageUtils::convert_image_msg(image_msg, debayered_img);
 
@@ -107,41 +116,18 @@ private:
 
                 cv::displayStatusBar("Image Viewer", topics_[current_topic_], 0);
             }
-
-            if (enable_profiling_)
-            {
-                profiler_.stop("Frame");
-                if (profiler_.get_data("Frame").duration_in_seconds() > 1.0)
-                {
-                    auto report = profiler_.report();
-                    RCLCPP_INFO(get_logger(), report.c_str());
-                    profiler_.reset();
-                }
-            }
         }
         catch (cv_bridge::Exception &e)
         {
             RCLCPP_ERROR(get_logger(), "CV bridge exception: %s", e.what());
         }
     }
-
-    rclcpp::QoS sub_qos_profile_{2};
-    message_filters::Subscriber<sensor_msgs::msg::Image> sub_image_;
-    message_filters::Subscriber<vision_msgs::msg::BoundingBox2DArray> sub_bbox_;
-    std::shared_ptr<message_filters::TimeSynchronizer<sensor_msgs::msg::Image, vision_msgs::msg::BoundingBox2DArray>> time_synchronizer_;
-
-    sky360lib::utils::Profiler profiler_;
-    std::vector<std::string> topics_;
-    int current_topic_;
-
-    friend std::shared_ptr<FrameBBoxViewer> std::make_shared<FrameBBoxViewer>();
 };
 
 int main(int argc, char **argv)
 {
     rclcpp::init(argc, argv);
-    auto annotatedFrameProvider = FrameBBoxViewer::Create();
-    rclcpp::spin(annotatedFrameProvider);
+    rclcpp::spin(FrameBBoxViewer::create());
     rclcpp::shutdown();
     return 0;
 }

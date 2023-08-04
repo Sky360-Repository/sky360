@@ -27,22 +27,13 @@ class AllSkyPublisher
     : public ParameterNode
 {
 public:
-    AllSkyPublisher()
-        : ParameterNode("all_sky_image_publisher_node")
+    static std::shared_ptr<AllSkyPublisher> create()
     {
-        rclcpp::QoS qos_profile(2); // The depth of the publisher queue
-        qos_profile.reliability(rclcpp::ReliabilityPolicy::BestEffort);
-        qos_profile.durability(rclcpp::DurabilityPolicy::Volatile);
-        qos_profile.history(rclcpp::HistoryPolicy::KeepLast);
-
-        image_publisher_ = create_publisher<sensor_msgs::msg::Image>("sky360/camera/all_sky/bayer", qos_profile);
-        image_info_publisher_ = create_publisher<sky360_camera::msg::ImageInfo>("sky360/camera/all_sky/image_info", qos_profile);
-        camera_info_publisher_ = create_publisher<sky360_camera::msg::CameraInfo>("sky360/camera/all_sky/camera_info", qos_profile);
-
-        open_camera();
-        declare_parameters();
+        auto image_publisher = std::shared_ptr<AllSkyPublisher>(new AllSkyPublisher());
+        image_publisher->init();
+        return image_publisher;
     }
-
+    
     void start_publishing()
     {
         cv::Mat image;
@@ -71,7 +62,9 @@ public:
 
             auto image_info_msg = generate_image_info(header, camera_params);
             image_info_publisher_->publish(image_info_msg);
-            publish_camera_info(header);
+
+            camera_info_msg_.header = header;
+            camera_info_publisher_->publish(camera_info_msg_);
 
             if (enable_profiling_)
             {
@@ -88,12 +81,51 @@ public:
         }
     }
 
-protected:
+private:
+    boost::uuids::random_generator uuid_generator_;
+    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr image_publisher_;
+    rclcpp::Publisher<sky360_camera::msg::ImageInfo>::SharedPtr image_info_publisher_;
+    rclcpp::Publisher<sky360_camera::msg::CameraInfo>::SharedPtr camera_info_publisher_;
+    sky360_camera::msg::CameraInfo camera_info_msg_;
+    sky360lib::camera::QhyCamera qhy_camera_;
+    sky360lib::utils::SubSampler subSampler{50, 50};
+    sky360lib::utils::BrightnessEstimator brightnessEstimator;
+    sky360lib::utils::AutoExposure auto_exposure_control_{0.25, 180, 0.01, 100};
+    sky360lib::utils::Profiler profiler_;
+    sky360lib::camera::QhyCamera::BayerFormat bayer_format_;
+    std::string bayer_format_str_;
+    bool auto_exposure_;
+    bool enable_profiling_;
+
+    AllSkyPublisher()
+        : ParameterNode("all_sky_image_publisher_node")
+    {
+    }
+
+    void init()
+    {
+        rclcpp::QoS qos_profile(2); // The depth of the publisher queue
+        qos_profile.reliability(rclcpp::ReliabilityPolicy::BestEffort);
+        qos_profile.durability(rclcpp::DurabilityPolicy::Volatile);
+        qos_profile.history(rclcpp::HistoryPolicy::KeepLast);
+
+        image_publisher_ = create_publisher<sensor_msgs::msg::Image>("sky360/camera/all_sky/bayer", qos_profile);
+        image_info_publisher_ = create_publisher<sky360_camera::msg::ImageInfo>("sky360/camera/all_sky/image_info", qos_profile);
+        camera_info_publisher_ = create_publisher<sky360_camera::msg::CameraInfo>("sky360/camera/all_sky/camera_info", qos_profile);
+
+        open_camera();
+        declare_node_parameters();
+    }
+
     void set_parameters_callback(const std::vector<rclcpp::Parameter> &params) override
     {
         for (auto &param : params)
         {
-            if (param.get_name() == "auto_exposure")
+            if (param.get_name() == "enable_profiling")
+            {
+                enable_profiling_ = param.as_bool();
+            }
+            else if (param.get_name() == "auto_exposure")
             {
                 auto_exposure_ = param.as_bool();
             }
@@ -152,9 +184,10 @@ protected:
         }
     }
 
-    void declare_parameters() override
+    void declare_node_parameters()
     {
-        std::vector<rclcpp::Parameter> declare_params = {
+        std::vector<rclcpp::Parameter> params = {
+            rclcpp::Parameter("enable_profiling", false),
             rclcpp::Parameter("auto_exposure", true),
             rclcpp::Parameter("exposure", 2000),
             rclcpp::Parameter("gain", 0),
@@ -167,40 +200,8 @@ protected:
             rclcpp::Parameter("cooling", false),
             rclcpp::Parameter("target_temperature", 0.0),
         };
-        ParameterNode::declare_parameters(declare_params);
+        declare_parameters(params);
     }
-
-    static inline std::string convert_bayer_pattern(sky360lib::camera::QhyCamera::BayerFormat _bayerFormat)
-    {
-        switch (_bayerFormat)
-        {
-        case sky360lib::camera::QhyCamera::BayerFormat::BayerGB:
-            return sensor_msgs::image_encodings::BAYER_GBRG8;
-        case sky360lib::camera::QhyCamera::BayerFormat::BayerGR:
-            return sensor_msgs::image_encodings::BAYER_GRBG8;
-        case sky360lib::camera::QhyCamera::BayerFormat::BayerBG:
-            return sensor_msgs::image_encodings::BAYER_BGGR8;
-        case sky360lib::camera::QhyCamera::BayerFormat::BayerRG:
-            return sensor_msgs::image_encodings::BAYER_RGGB8;
-        default:
-            return sensor_msgs::image_encodings::MONO8;
-        }
-    }
-
-private:
-    boost::uuids::random_generator uuid_generator_;
-    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr image_publisher_;
-    rclcpp::Publisher<sky360_camera::msg::ImageInfo>::SharedPtr image_info_publisher_;
-    rclcpp::Publisher<sky360_camera::msg::CameraInfo>::SharedPtr camera_info_publisher_;
-    sky360_camera::msg::CameraInfo camera_info_msg_;
-    sky360lib::camera::QhyCamera qhy_camera_;
-    sky360lib::utils::SubSampler subSampler{50, 50};
-    sky360lib::utils::BrightnessEstimator brightnessEstimator;
-    sky360lib::utils::AutoExposure auto_exposure_control_{0.25, 180, 0.01, 100};
-    sky360lib::utils::Profiler profiler_;
-    sky360lib::camera::QhyCamera::BayerFormat bayer_format_;
-    std::string bayer_format_str_;
-    bool auto_exposure_;
 
     inline void open_camera()
     {
@@ -311,18 +312,28 @@ private:
         camera_info_msg_.temperature_limits.step = camera_info->temperature_limits.step;
     }
 
-    inline void publish_camera_info(std_msgs::msg::Header &header)
+    static inline std::string convert_bayer_pattern(sky360lib::camera::QhyCamera::BayerFormat _bayerFormat)
     {
-        camera_info_msg_.header = header;
-
-        camera_info_publisher_->publish(camera_info_msg_);
+        switch (_bayerFormat)
+        {
+        case sky360lib::camera::QhyCamera::BayerFormat::BayerGB:
+            return sensor_msgs::image_encodings::BAYER_GBRG8;
+        case sky360lib::camera::QhyCamera::BayerFormat::BayerGR:
+            return sensor_msgs::image_encodings::BAYER_GRBG8;
+        case sky360lib::camera::QhyCamera::BayerFormat::BayerBG:
+            return sensor_msgs::image_encodings::BAYER_BGGR8;
+        case sky360lib::camera::QhyCamera::BayerFormat::BayerRG:
+            return sensor_msgs::image_encodings::BAYER_RGGB8;
+        default:
+            return sensor_msgs::image_encodings::MONO8;
+        }
     }
 };
 
 int main(int argc, char **argv)
 {
     rclcpp::init(argc, argv);
-    auto image_publisher = std::make_shared<AllSkyPublisher>();
+    auto image_publisher = AllSkyPublisher::create();
     image_publisher->start_publishing();
     rclcpp::shutdown();
     return 0;

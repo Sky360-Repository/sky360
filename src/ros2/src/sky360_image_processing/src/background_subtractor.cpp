@@ -16,8 +16,36 @@ class BackgroundSubtractor
     : public ParameterNode
 {
 public:
+    static std::shared_ptr<BackgroundSubtractor> create()
+    {
+        auto result = std::shared_ptr<BackgroundSubtractor>(new BackgroundSubtractor());
+        result->init();
+        return result;
+    }
+    
+private:
+    enum BGSType
+    {
+        Vibe,
+        WMV
+    };
+
+    rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr image_subscription_;
+    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr image_publisher_;
+    rclcpp::Publisher<vision_msgs::msg::BoundingBox2DArray>::SharedPtr detection_publisher_;
+
+    std::unique_ptr<sky360lib::bgs::CoreBgs> bgsPtr{nullptr};
+    sky360lib::blobs::ConnectedBlobDetection blob_detector_{sky360lib::blobs::ConnectedBlobDetectionParams(7, 49, 40, 100)};
+    sky360lib::utils::Profiler profiler_;
+    bool enable_profiling_;
+
     BackgroundSubtractor()
         : ParameterNode("background_subtractor_node")
+        , enable_profiling_(false)
+    {
+    }
+
+    void init()
     {
         // Define the QoS profile for the subscriber
         rclcpp::QoS sub_qos_profile(2);
@@ -37,20 +65,28 @@ public:
 
         bgsPtr = createBGS(WMV);
 
-        declare_parameters();
+        declare_node_parameters();
     }
 
-protected:
     void set_parameters_callback(const std::vector<rclcpp::Parameter> &params) override
     {
-        (void)params;
+        for (auto &param : params)
+        {
+            if (param.get_name() == "enable_profiling")
+            {
+                enable_profiling_ = param.as_bool();
+            }
+        }
     }
 
-    void declare_parameters() override
+    void declare_node_parameters()
     {
+        std::vector<rclcpp::Parameter> params = {
+            rclcpp::Parameter("enable_profiling", false),
+        };
+        declare_parameters(params);
     }
 
-private:
     void imageCallback(const sensor_msgs::msg::Image::SharedPtr msg)
     {
         try
@@ -133,12 +169,6 @@ private:
         }
     }
 
-    enum BGSType
-    {
-        Vibe,
-        WMV
-    };
-
     std::unique_ptr<sky360lib::bgs::CoreBgs> createBGS(BGSType _type)
     {
         switch (_type)
@@ -151,20 +181,12 @@ private:
             return nullptr;
         }
     }
-
-    rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr image_subscription_;
-    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr image_publisher_;
-    rclcpp::Publisher<vision_msgs::msg::BoundingBox2DArray>::SharedPtr detection_publisher_;
-
-    std::unique_ptr<sky360lib::bgs::CoreBgs> bgsPtr{nullptr};
-    sky360lib::blobs::ConnectedBlobDetection blob_detector_{sky360lib::blobs::ConnectedBlobDetectionParams(7, 49, 40, 100)};
-    sky360lib::utils::Profiler profiler_;
 };
 
 int main(int argc, char **argv)
 {
     rclcpp::init(argc, argv);
-    rclcpp::spin(std::make_shared<BackgroundSubtractor>());
+    rclcpp::spin(BackgroundSubtractor::create());
     rclcpp::shutdown();
     return 0;
 }

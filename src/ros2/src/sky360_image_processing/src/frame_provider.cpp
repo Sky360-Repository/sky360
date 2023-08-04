@@ -18,8 +18,23 @@ class FrameProvider
     : public ParameterNode
 {
 public:
+    static std::shared_ptr<FrameProvider> create()
+    {
+        auto result = std::shared_ptr<FrameProvider>(new FrameProvider());
+        result->init();
+        return result;
+    }
+    
+private:
+    rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr image_subscription_;
+    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr masked_publisher_;
+
     FrameProvider() 
         : ParameterNode("frame_provider_node")
+    {
+    }
+
+    void init()
     {
         // Define the QoS profile for the subscriber
         rclcpp::QoS sub_qos_profile(2);
@@ -37,30 +52,17 @@ public:
             std::bind(&FrameProvider::imageCallback, this, std::placeholders::_1));
 
         masked_publisher_ = create_publisher<sensor_msgs::msg::Image>("sky360/frames/all_sky/masked", pub_qos_profile);
-
-        declare_parameters();
     }
 
-protected:
     void set_parameters_callback(const std::vector<rclcpp::Parameter> &params) override
     {
         (void)params;
     }
 
-    void declare_parameters() override
-    {
-    }
-
-private:
     void imageCallback(const sensor_msgs::msg::Image::SharedPtr msg)
     {
         try
         {
-            if (enable_profiling_)
-            {
-                profiler_.start("Frame");
-            }
-
             auto pattern = msg->encoding;
             msg->encoding = msg->encoding != sensor_msgs::image_encodings::BGR8 ? sensor_msgs::image_encodings::MONO8 : sensor_msgs::image_encodings::BGR8;
 
@@ -88,34 +90,18 @@ private:
                 auto the_image_msg = cv_bridge::CvImage(msg->header, the_img.channels() == 1 ? sensor_msgs::image_encodings::MONO8 : sensor_msgs::image_encodings::BGR8, the_img).toImageMsg();
                 masked_publisher_->publish(*the_image_msg);
             }
-
-            if (enable_profiling_)
-            {
-                profiler_.stop("Frame");
-                if (profiler_.get_data("Frame").duration_in_seconds() > 1.0)
-                {
-                    auto report = profiler_.report();
-                    RCLCPP_INFO(get_logger(), report.c_str());
-                    profiler_.reset();
-                }
-            }
         }
         catch (cv_bridge::Exception &e)
         {
             RCLCPP_ERROR(this->get_logger(), "CV bridge exception: %s", e.what());
         }
     }
-
-    rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr image_subscription_;
-    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr masked_publisher_;
-
-    sky360lib::utils::Profiler profiler_;
 };
 
 int main(int argc, char **argv)
 {
     rclcpp::init(argc, argv);
-    rclcpp::spin(std::make_shared<FrameProvider>());
+    rclcpp::spin(FrameProvider::create());
     rclcpp::shutdown();
     return 0;
 }

@@ -22,28 +22,40 @@ class TrackProvider
     : public ParameterNode
 {
 public:
-    static std::shared_ptr<TrackProvider> Create()
+    static std::shared_ptr<TrackProvider> create()
     {
         auto result = std::shared_ptr<TrackProvider>(new TrackProvider());
         result->init();
         return result;
     }
 
-protected:
+private:
+    using Clock = std::chrono::high_resolution_clock;
+    using TimePoint = std::chrono::time_point<Clock>;
+
+    std::shared_ptr<message_filters::Subscriber<sensor_msgs::msg::Image>> masked_frame_subscription_;
+    std::shared_ptr<message_filters::Subscriber<vision_msgs::msg::BoundingBox2DArray>> detector_bounding_boxes_subscription_;
+    std::shared_ptr<message_filters::TimeSynchronizer<sensor_msgs::msg::Image, vision_msgs::msg::BoundingBox2DArray>> time_synchronizer_;
+
+    rclcpp::Publisher<sky360_interfaces::msg::TrackingState>::SharedPtr pub_tracker_tracking_state;
+    rclcpp::Publisher<sky360_interfaces::msg::TrackDetectionArray>::SharedPtr pub_tracker_detects;
+    rclcpp::Publisher<sky360_interfaces::msg::TrackTrajectoryArray>::SharedPtr pub_tracker_trajectory;
+    rclcpp::Publisher<sky360_interfaces::msg::TrackTrajectoryArray>::SharedPtr pub_tracker_prediction;
+
+    sky360lib::utils::Profiler profiler_;
+    VideoTracker video_tracker_;
+
+    friend std::shared_ptr<TrackProvider> std::make_shared<TrackProvider>();
+
     void set_parameters_callback(const std::vector<rclcpp::Parameter> &params) override
     {
         (void)params;
     }
 
-    void declare_parameters() override
-    {
-    }
-
-private:
     TrackProvider()
-        : ParameterNode("frame_provider_node"), video_tracker_(std::map<std::string, std::string>(), get_logger())
+        : ParameterNode("frame_provider_node")
+        , video_tracker_(std::map<std::string, std::string>(), get_logger())
     {
-        declare_parameters();
     }
 
     void init()
@@ -64,11 +76,6 @@ private:
     {
         try
         {
-            if (enable_profiling_)
-            {
-                profiler_.start("Frame");
-            }
-
             cv_bridge::CvImagePtr masked_img_bridge = cv_bridge::toCvCopy(image_msg, image_msg->encoding);
 
             std::vector<cv::Rect> bboxes;
@@ -83,17 +90,6 @@ private:
             publish_trajectory_array(image_msg->header);
             publish_prediction_array(image_msg->header);
             publish_tracking_state(image_msg->header);
-
-            if (enable_profiling_)
-            {
-                profiler_.stop("Frame");
-                if (profiler_.get_data("Frame").duration_in_seconds() > 1.0)
-                {
-                    auto report = profiler_.report();
-                    RCLCPP_INFO(get_logger(), report.c_str());
-                    profiler_.reset();
-                }
-            }
         }
         catch (cv_bridge::Exception &e)
         {
@@ -194,30 +190,12 @@ private:
 
         prediction_array_msg.trajectories.push_back(track_msg);
     }
-
-    using Clock = std::chrono::high_resolution_clock;
-    using TimePoint = std::chrono::time_point<Clock>;
-
-    std::shared_ptr<message_filters::Subscriber<sensor_msgs::msg::Image>> masked_frame_subscription_;
-    std::shared_ptr<message_filters::Subscriber<vision_msgs::msg::BoundingBox2DArray>> detector_bounding_boxes_subscription_;
-    std::shared_ptr<message_filters::TimeSynchronizer<sensor_msgs::msg::Image, vision_msgs::msg::BoundingBox2DArray>> time_synchronizer_;
-
-    rclcpp::Publisher<sky360_interfaces::msg::TrackingState>::SharedPtr pub_tracker_tracking_state;
-    rclcpp::Publisher<sky360_interfaces::msg::TrackDetectionArray>::SharedPtr pub_tracker_detects;
-    rclcpp::Publisher<sky360_interfaces::msg::TrackTrajectoryArray>::SharedPtr pub_tracker_trajectory;
-    rclcpp::Publisher<sky360_interfaces::msg::TrackTrajectoryArray>::SharedPtr pub_tracker_prediction;
-
-    sky360lib::utils::Profiler profiler_;
-    VideoTracker video_tracker_;
-
-    friend std::shared_ptr<TrackProvider> std::make_shared<TrackProvider>();
 };
 
 int main(int argc, char **argv)
 {
     rclcpp::init(argc, argv);
-    auto trackProvider = TrackProvider::Create();
-    rclcpp::spin(trackProvider);
+    rclcpp::spin(TrackProvider::create());
     rclcpp::shutdown();
     return 0;
 }
