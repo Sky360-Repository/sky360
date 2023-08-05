@@ -26,7 +26,7 @@ If you encounter a bug or have a feature request related to either the ROS2 back
 TBD
 
 ## Contributing to Sky360.org
-Please take a look at our [contribute.md](./contribute.md)
+Please take a look at our [contribute.md](./contributing.md)
 
 ## System Architecture
 The Sky360.org system follows a modular architecture, allowing different components to communicate and work together seamlessly. The primary components of the system include:
