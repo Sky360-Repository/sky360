@@ -63,20 +63,15 @@ private:
         cv::displayStatusBar("Image Viewer", topics_[current_topic_], 0);
     }
 
-    void set_parameters_callback(const std::vector<rclcpp::Parameter> &params) override
-    {
-        for (auto &param : params)
-        {
-            if (param.get_name() == "topics")
-            {
-                topics_ = param.as_string_array();
-            }
-        }
-    }
-
     void declare_node_parameters()
     {
-        declare_parameter<std::vector<std::string>>("topics", {"sky360/camera/all_sky/bayer", "sky360/frames/all_sky/foreground_mask"});
+        std::vector<ParameterNode::ActionParam> params = {
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("topics", std::vector<std::string>({"sky360/camera/all_sky/bayer", "sky360/frames/all_sky/foreground_mask"})), 
+                [this](const rclcpp::Parameter& param) {topics_ = param.as_string_array();}
+            ),
+        };
+        add_action_parameters(params);
     }
 
     void imageCallback(const sensor_msgs::msg::Image::SharedPtr &image_msg, const vision_msgs::msg::BoundingBox2DArray::SharedPtr &bbox_msg)

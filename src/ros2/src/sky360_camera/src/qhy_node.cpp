@@ -113,114 +113,118 @@ private:
 
     void declare_node_parameters()
     {
-        std::vector<rclcpp::Parameter> params = {
-            rclcpp::Parameter("image_publish_topic", "sky360/camera/all_sky/bayer"),
-            rclcpp::Parameter("image_info_publish_topic", "sky360/camera/all_sky/image_info"),
-            rclcpp::Parameter("camera_info_publish_topic", "sky360/camera/all_sky/camera_info"),
+        std::vector<ParameterNode::ActionParam> params = {
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("image_publish_topic", "sky360/camera/all_sky/bayer"), 
+                [this](const rclcpp::Parameter& param) {
+                    image_publish_topic_ = param.as_string(); 
+                    image_publisher_ = create_publisher<sensor_msgs::msg::Image>(image_publish_topic_, qos_profile_);
+                }
+            ),
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("image_info_publish_topic", "sky360/camera/all_sky/image_info"), 
+                [this](const rclcpp::Parameter& param) {
+                    image_info_publish_topic_ = param.as_string(); 
+                    image_info_publisher_ = create_publisher<sky360_camera::msg::ImageInfo>(image_info_publish_topic_, qos_profile_);
+                }
+            ),
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("camera_info_publish_topic", "sky360/camera/all_sky/camera_info"), 
+                [this](const rclcpp::Parameter& param) {
+                    camera_info_publish_topic_ = param.as_string(); 
+                    camera_info_publisher_ = create_publisher<sky360_camera::msg::CameraInfo>(camera_info_publish_topic_, qos_profile_);
+                }
+            ),
             // camera_id should be declared before others so it will open the camera before setting the other configurations
-            rclcpp::Parameter("camera_id", ""), 
-            rclcpp::Parameter("enable_profiling", false),
-            rclcpp::Parameter("auto_exposure", true),
-            rclcpp::Parameter("exposure", 2000),
-            rclcpp::Parameter("gain", 0),
-            rclcpp::Parameter("offset", 0),
-            rclcpp::Parameter("bpp", 8),
-            rclcpp::Parameter("contrast", 0.0),
-            rclcpp::Parameter("brightness", 0.0),
-            rclcpp::Parameter("gamma", 1.0),
-            rclcpp::Parameter("bin", 1),
-            rclcpp::Parameter("cooling", false),
-            rclcpp::Parameter("target_temperature", 0.0),
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("camera_id", ""), 
+                [this](const rclcpp::Parameter& param) {
+                    camera_id_ = param.as_string();
+                    open_camera();
+                }
+            ),
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("enable_profiling", false), 
+                [this](const rclcpp::Parameter& param) {enable_profiling_ = param.as_bool();}
+            ),
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("auto_exposure", true), 
+                [this](const rclcpp::Parameter& param) {auto_exposure_ = param.as_bool();}
+            ),
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("exposure", 2000), 
+                [this](const rclcpp::Parameter& param) {
+                    auto exposure = param.as_int();
+                    qhy_camera_.set_control(sky360lib::camera::QhyCamera::ControlParam::Exposure, exposure);
+                }
+            ),
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("gain", 0), 
+                [this](const rclcpp::Parameter& param) {
+                    auto gain = param.as_int();
+                    qhy_camera_.set_control(sky360lib::camera::QhyCamera::ControlParam::Gain, gain);
+                }
+            ),
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("offset", 0), 
+                [this](const rclcpp::Parameter& param) {
+                    auto offset = param.as_int();
+                    qhy_camera_.set_control(sky360lib::camera::QhyCamera::ControlParam::Offset, offset);
+                }
+            ),
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("bpp", 8), 
+                [this](const rclcpp::Parameter& param) {
+                    auto bpp = param.as_int();
+                    qhy_camera_.set_control(sky360lib::camera::QhyCamera::ControlParam::TransferBits, bpp);
+                }
+            ),
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("contrast", 0.0), 
+                [this](const rclcpp::Parameter& param) {
+                    auto contrast = param.as_double();
+                    qhy_camera_.set_control(sky360lib::camera::QhyCamera::ControlParam::Contrast, contrast);
+                }
+            ),
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("brightness", 0.0), 
+                [this](const rclcpp::Parameter& param) {
+                    auto brightness = param.as_double();
+                    qhy_camera_.set_control(sky360lib::camera::QhyCamera::ControlParam::Brightness, brightness);
+                }
+            ),
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("gamma", 1.0), 
+                [this](const rclcpp::Parameter& param) {
+                    auto gamma = param.as_double();
+                    qhy_camera_.set_control(sky360lib::camera::QhyCamera::ControlParam::Gamma, gamma);
+                }
+            ),
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("bin", 1), 
+                [this](const rclcpp::Parameter& param) {
+                    auto bin = param.as_int();
+                    qhy_camera_.set_bin_mode(sky360lib::camera::QhyCamera::BinMode(bin));
+                }
+            ),
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("cooling", false), 
+                [this](const rclcpp::Parameter& param) {
+                    auto camera_params = qhy_camera_.get_camera_params();
+                    auto cooling = param.as_bool();
+                    qhy_camera_.set_cool_temp(camera_params.target_temp, cooling);
+                }
+            ),
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("target_temperature", 0.0), 
+                [this](const rclcpp::Parameter& param) {
+                    auto camera_params = qhy_camera_.get_camera_params();
+                    auto target_temperature = param.as_double();
+                    qhy_camera_.set_cool_temp(target_temperature, camera_params.cool_enabled);
+                }
+            ),
         };
-        declare_parameters(params);
-    }
-    
-    void set_parameters_callback(const std::vector<rclcpp::Parameter> &params) override
-    {
-        for (auto &param : params)
-        {
-            if (param.get_name() == "image_publish_topic")
-            {
-                image_publish_topic_ = param.as_string();
-                image_publisher_ = create_publisher<sensor_msgs::msg::Image>(image_publish_topic_, qos_profile_);
-            }
-            else if (param.get_name() == "image_info_publish_topic")
-            {
-                image_info_publish_topic_ = param.as_string();
-                image_info_publisher_ = create_publisher<sky360_camera::msg::ImageInfo>(image_info_publish_topic_, qos_profile_);
-            }
-            else if (param.get_name() == "camera_info_publish_topic")
-            {
-                camera_info_publish_topic_ = param.as_string();
-                camera_info_publisher_ = create_publisher<sky360_camera::msg::CameraInfo>(camera_info_publish_topic_, qos_profile_);
-            }
-            else if (param.get_name() == "camera_id")
-            {
-                camera_id_ = param.as_string();
-                open_camera();
-                // TODO: Reopen camera if already open
-            }
-            else if (param.get_name() == "enable_profiling")
-            {
-                enable_profiling_ = param.as_bool();
-            }
-            else if (param.get_name() == "auto_exposure")
-            {
-                auto_exposure_ = param.as_bool();
-            }
-            else if (param.get_name() == "exposure")
-            {
-                auto exposure = param.as_int();
-                qhy_camera_.set_control(sky360lib::camera::QhyCamera::ControlParam::Exposure, exposure);
-            }
-            else if (param.get_name() == "gain")
-            {
-                auto gain = param.as_int();
-                qhy_camera_.set_control(sky360lib::camera::QhyCamera::ControlParam::Gain, gain);
-            }
-            else if (param.get_name() == "offset")
-            {
-                auto offset = param.as_int();
-                qhy_camera_.set_control(sky360lib::camera::QhyCamera::ControlParam::Offset, offset);
-            }
-            else if (param.get_name() == "bpp")
-            {
-                auto bpp = param.as_int();
-                qhy_camera_.set_control(sky360lib::camera::QhyCamera::ControlParam::TransferBits, bpp);
-            }
-            else if (param.get_name() == "contrast")
-            {
-                auto contrast = param.as_double();
-                qhy_camera_.set_control(sky360lib::camera::QhyCamera::ControlParam::Contrast, contrast);
-            }
-            else if (param.get_name() == "brightness")
-            {
-                auto brightness = param.as_double();
-                qhy_camera_.set_control(sky360lib::camera::QhyCamera::ControlParam::Brightness, brightness);
-            }
-            else if (param.get_name() == "gamma")
-            {
-                auto gamma = param.as_double();
-                qhy_camera_.set_control(sky360lib::camera::QhyCamera::ControlParam::Gamma, gamma);
-            }
-            else if (param.get_name() == "bin")
-            {
-                auto bin = param.as_int();
-                qhy_camera_.set_bin_mode(sky360lib::camera::QhyCamera::BinMode(bin));
-            }
-            else if (param.get_name() == "cooling")
-            {
-                auto camera_params = qhy_camera_.get_camera_params();
-                auto cooling = param.as_bool();
-                qhy_camera_.set_cool_temp(camera_params.target_temp, cooling);
-            }
-            else if (param.get_name() == "target_temperature")
-            {
-                auto camera_params = qhy_camera_.get_camera_params();
-                auto target_temperature = param.as_double();
-                qhy_camera_.set_cool_temp(target_temperature, camera_params.cool_enabled);
-            }
-        }
+        add_action_parameters(params);
     }
 
     inline void open_camera()

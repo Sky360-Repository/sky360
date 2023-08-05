@@ -54,11 +54,6 @@ private:
         masked_publisher_ = create_publisher<sensor_msgs::msg::Image>("sky360/frames/all_sky/masked", pub_qos_profile);
     }
 
-    void set_parameters_callback(const std::vector<rclcpp::Parameter> &params) override
-    {
-        (void)params;
-    }
-
     void imageCallback(const sensor_msgs::msg::Image::SharedPtr msg)
     {
         try

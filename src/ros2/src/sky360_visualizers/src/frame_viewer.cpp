@@ -45,18 +45,13 @@ private:
 
     void declare_node_parameters()
     {
-        declare_parameter<std::vector<std::string>>("topics", {"sky360/camera/all_sky/bayer", "sky360/frames/all_sky/foreground_mask"});
-    }
-    
-    void set_parameters_callback(const std::vector<rclcpp::Parameter> &params) override
-    {
-        for (auto &param : params)
-        {
-            if (param.get_name() == "topics")
-            {
-                topics_ = param.as_string_array();
-            }
-        }
+        std::vector<ParameterNode::ActionParam> params = {
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("topics", std::vector<std::string>({"sky360/camera/all_sky/bayer", "sky360/frames/all_sky/foreground_mask"})), 
+                [this](const rclcpp::Parameter& param) {topics_ = param.as_string_array();}
+            ),
+        };
+        add_action_parameters(params);
     }
     
     void init()

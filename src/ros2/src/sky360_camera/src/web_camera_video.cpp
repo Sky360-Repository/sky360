@@ -95,49 +95,42 @@ private:
 
     void declare_node_parameters()
     {
-        std::vector<rclcpp::Parameter> params = {
-            rclcpp::Parameter("image_publish_topic", "sky360/camera/all_sky/bayer"),
-            rclcpp::Parameter("image_info_publish_topic", "sky360/camera/all_sky/image_info"),
-            rclcpp::Parameter("camera_info_publish_topic", "sky360/camera/all_sky/camera_info"),
-            rclcpp::Parameter("is_video", false),
-            rclcpp::Parameter("camera_id", 0),
-            rclcpp::Parameter("video_path", "")
+        std::vector<ParameterNode::ActionParam> params = {
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("image_publish_topic", "sky360/camera/all_sky/bayer"), 
+                [this](const rclcpp::Parameter& param) {
+                    image_publish_topic_ = param.as_string(); 
+                    image_publisher_ = create_publisher<sensor_msgs::msg::Image>(image_publish_topic_, qos_profile_);
+                }
+            ),
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("image_info_publish_topic", "sky360/camera/all_sky/image_info"), 
+                [this](const rclcpp::Parameter& param) {
+                    image_info_publish_topic_ = param.as_string(); 
+                    image_info_publisher_ = create_publisher<sky360_camera::msg::ImageInfo>(image_info_publish_topic_, qos_profile_);
+                }
+            ),
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("camera_info_publish_topic", "sky360/camera/all_sky/camera_info"), 
+                [this](const rclcpp::Parameter& param) {
+                    camera_info_publish_topic_ = param.as_string(); 
+                    camera_info_publisher_ = create_publisher<sky360_camera::msg::CameraInfo>(camera_info_publish_topic_, qos_profile_);
+                }
+            ),
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("is_video", false), 
+                [this](const rclcpp::Parameter& param) {is_video_ = param.as_bool();}
+            ),
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("camera_id", 0), 
+                [this](const rclcpp::Parameter& param) {camera_id_ = param.as_int();}
+            ),
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("video_path", ""), 
+                [this](const rclcpp::Parameter& param) {video_path_ = param.as_string();}
+            )
         };
-        declare_parameters(params);
-    }
-
-    void set_parameters_callback(const std::vector<rclcpp::Parameter> &params) override
-    {
-        for (auto &param : params)
-        {
-            if (param.get_name() == "image_publish_topic")
-            {
-                image_publish_topic_ = param.as_string();
-                image_publisher_ = create_publisher<sensor_msgs::msg::Image>(image_publish_topic_, qos_profile_);
-            }
-            else if (param.get_name() == "image_info_publish_topic")
-            {
-                image_info_publish_topic_ = param.as_string();
-                image_info_publisher_ = create_publisher<sky360_camera::msg::ImageInfo>(image_info_publish_topic_, qos_profile_);
-            }
-            else if (param.get_name() == "camera_info_publish_topic")
-            {
-                camera_info_publish_topic_ = param.as_string();
-                camera_info_publisher_ = create_publisher<sky360_camera::msg::CameraInfo>(camera_info_publish_topic_, qos_profile_);
-            }
-            else if (param.get_name() == "is_video")
-            {
-                is_video_ = param.as_bool();
-            }
-            else if (param.get_name() == "camera_id")
-            {
-                camera_id_ = param.as_int();
-            }
-            else if (param.get_name() == "video_path")
-            {
-                video_path_ = param.as_string();
-            }
-        }
+        add_action_parameters(params);
     }
 
     inline void open_camera()

@@ -49,11 +49,6 @@ private:
             std::bind(&FrameSaver::imageCallback, this, std::placeholders::_1));
     }
 
-    void set_parameters_callback(const std::vector<rclcpp::Parameter> &params) override
-    {
-        (void)params;
-    }
-
     void imageCallback(const sensor_msgs::msg::Image::SharedPtr image_msg)
     {
         try

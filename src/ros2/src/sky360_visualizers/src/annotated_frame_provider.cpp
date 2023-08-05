@@ -84,11 +84,6 @@ private:
             RCLCPP_ERROR(get_logger(), "CV bridge exception: %s", e.what());
         }
     }
-
-    void set_parameters_callback(const std::vector<rclcpp::Parameter> &params) override
-    {
-        (void)params;
-    }
 };
 
 int main(int argc, char **argv)

@@ -47,11 +47,6 @@ private:
 
     friend std::shared_ptr<TrackProvider> std::make_shared<TrackProvider>();
 
-    void set_parameters_callback(const std::vector<rclcpp::Parameter> &params) override
-    {
-        (void)params;
-    }
-
     TrackProvider()
         : ParameterNode("frame_provider_node")
         , video_tracker_(std::map<std::string, std::string>(), get_logger())

@@ -68,23 +68,15 @@ private:
         declare_node_parameters();
     }
 
-    void set_parameters_callback(const std::vector<rclcpp::Parameter> &params) override
-    {
-        for (auto &param : params)
-        {
-            if (param.get_name() == "enable_profiling")
-            {
-                enable_profiling_ = param.as_bool();
-            }
-        }
-    }
-
     void declare_node_parameters()
     {
-        std::vector<rclcpp::Parameter> params = {
-            rclcpp::Parameter("enable_profiling", false),
+        std::vector<ParameterNode::ActionParam> params = {
+            ParameterNode::ActionParam(
+                rclcpp::Parameter("enable_profiling", false), 
+                [this](const rclcpp::Parameter& param) {enable_profiling_ = param.as_bool();}
+            ),
         };
-        declare_parameters(params);
+        add_action_parameters(params);
     }
 
     void imageCallback(const sensor_msgs::msg::Image::SharedPtr msg)

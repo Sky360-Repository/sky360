@@ -12,20 +12,39 @@ class ParameterNode
     : public rclcpp::Node
 {
 public:
+    struct ActionParam 
+    {
+        rclcpp::Parameter parameter;
+        std::function<void(const rclcpp::Parameter&)> action;
+
+        ActionParam(const rclcpp::Parameter &_param,
+                    std::function<void(const rclcpp::Parameter&)> _action) 
+            : parameter(_param), action(_action) 
+        {}
+    };
+
     ParameterNode(const std::string &node_name)
         : Node(node_name, *default_options())
     {
-        m_parameters_callback_handle = add_on_set_parameters_callback(std::bind(&ParameterNode::param_change_callback_method, this, std::placeholders::_1));
+        parameters_callback_handle_ = add_on_set_parameters_callback(std::bind(&ParameterNode::param_change_callback_method, this, std::placeholders::_1));
     }
 
 protected:
-    virtual void set_parameters_callback(const std::vector<rclcpp::Parameter> &parameters_to_set) = 0;
-
-    void declare_parameters(const std::vector<rclcpp::Parameter> &params)
+    void add_action_parameters(const std::vector<ActionParam>& action_params)
     {
-        for (const auto &param : params)
+        for (auto & action_param : action_params)
         {
-            declare_parameter(param.get_name(), param.get_parameter_value());
+            parameters_map_.insert_or_assign(action_param.parameter.get_name(), action_param);
+            declare_parameter(action_param.parameter.get_name(), action_param.parameter.get_parameter_value());
+        }
+    }
+
+    void update_action_param(const rclcpp::Parameter &_param)
+    {
+        auto it = parameters_map_.find(_param.get_name());
+        if (it != parameters_map_.end() && it->second.action != nullptr)
+        {
+            it->second.action(_param);
         }
     }
 
@@ -36,13 +55,17 @@ protected:
     }
 
 private:
-    rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr m_parameters_callback_handle;
+    rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr parameters_callback_handle_;
+    std::map<std::string, ActionParam> parameters_map_;
 
     rcl_interfaces::msg::SetParametersResult param_change_callback_method(const std::vector<rclcpp::Parameter> &parameters)
     {
         rcl_interfaces::msg::SetParametersResult result;
         result.successful = true;
-        set_parameters_callback(parameters);
+        for (auto &param : parameters)
+        {
+            update_action_param(param);
+        }
         return result;
     }
 
