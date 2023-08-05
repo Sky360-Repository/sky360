@@ -1,15 +1,11 @@
 #include <chrono>
 
-#include <boost/uuid/uuid_generators.hpp>
-#include <boost/uuid/uuid_io.hpp>
-
 #include <opencv2/opencv.hpp>
 
 #include <rclcpp/rclcpp.hpp>
 #include <cv_bridge/cv_bridge.hpp>
 
 #include <sensor_msgs/msg/image.hpp>
-#include <rcl_interfaces/msg/parameter_event.hpp>
 
 #include "sky360_camera/msg/image_info.hpp"
 #include "sky360_camera/msg/camera_info.hpp"
@@ -19,13 +15,13 @@
 #include <sky360lib/api/camera/qhy_camera.hpp>
 #include "sky360lib/api/utils/profiler.hpp"
 
-class WebCameraPublisher
+class WebCameraVideo
     : public ParameterNode
 {
 public:
-    static std::shared_ptr<WebCameraPublisher> create()
+    static std::shared_ptr<WebCameraVideo> create()
     {
-        auto result = std::shared_ptr<WebCameraPublisher>(new WebCameraPublisher());
+        auto result = std::shared_ptr<WebCameraVideo>(new WebCameraVideo());
         result->init();
         return result;
     }
@@ -55,7 +51,7 @@ public:
 
             std_msgs::msg::Header header;
             header.stamp = now();
-            header.frame_id = boost::uuids::to_string(uuid_generator_());
+            header.frame_id = generate_uuid();
 
             auto image_msg = cv_bridge::CvImage(header, image.channels() == 1 ? sensor_msgs::image_encodings::MONO8 : sensor_msgs::image_encodings::BGR8, image).toImageMsg();
             image_publisher_->publish(*image_msg);
@@ -71,7 +67,7 @@ public:
     }
 
 private:
-    boost::uuids::random_generator uuid_generator_;
+    rclcpp::QoS qos_profile_{2}; // The depth of the publisher queue
     cv::VideoCapture video_capture_;
     rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr image_publisher_;
     rclcpp::Publisher<sky360_camera::msg::ImageInfo>::SharedPtr image_info_publisher_;
@@ -80,31 +76,56 @@ private:
     bool is_video_;
     int camera_id_;
     std::string video_path_;
+    std::string image_publish_topic_;
+    std::string image_info_publish_topic_;
+    std::string camera_info_publish_topic_;
 
-    WebCameraPublisher()
-        : ParameterNode("web_camera_publisher_node")
+    WebCameraVideo()
+        : ParameterNode("web_camera_video_node")
     {
+        qos_profile_.reliability(rclcpp::ReliabilityPolicy::BestEffort);
+        qos_profile_.durability(rclcpp::DurabilityPolicy::Volatile);
+        qos_profile_.history(rclcpp::HistoryPolicy::KeepLast);
     }
 
     void init()
     {
-        rclcpp::QoS qos_profile(2); // The depth of the publisher queue
-        qos_profile.reliability(rclcpp::ReliabilityPolicy::BestEffort);
-        qos_profile.durability(rclcpp::DurabilityPolicy::Volatile);
-        qos_profile.history(rclcpp::HistoryPolicy::KeepLast);
-
-        image_publisher_ = create_publisher<sensor_msgs::msg::Image>("sky360/camera/all_sky/bayer", qos_profile);
-        image_info_publisher_ = create_publisher<sky360_camera::msg::ImageInfo>("sky360/camera/all_sky/image_info", qos_profile);
-        camera_info_publisher_ = create_publisher<sky360_camera::msg::CameraInfo>("sky360/camera/all_sky/camera_info", qos_profile);
-        
         declare_node_parameters();
+    }
+
+    void declare_node_parameters()
+    {
+        std::vector<rclcpp::Parameter> params = {
+            rclcpp::Parameter("image_publish_topic", "sky360/camera/all_sky/bayer"),
+            rclcpp::Parameter("image_info_publish_topic", "sky360/camera/all_sky/image_info"),
+            rclcpp::Parameter("camera_info_publish_topic", "sky360/camera/all_sky/camera_info"),
+            rclcpp::Parameter("is_video", false),
+            rclcpp::Parameter("camera_id", 0),
+            rclcpp::Parameter("video_path", "")
+        };
+        declare_parameters(params);
     }
 
     void set_parameters_callback(const std::vector<rclcpp::Parameter> &params) override
     {
         for (auto &param : params)
         {
-            if (param.get_name() == "is_video")
+            if (param.get_name() == "image_publish_topic")
+            {
+                image_publish_topic_ = param.as_string();
+                image_publisher_ = create_publisher<sensor_msgs::msg::Image>(image_publish_topic_, qos_profile_);
+            }
+            else if (param.get_name() == "image_info_publish_topic")
+            {
+                image_info_publish_topic_ = param.as_string();
+                image_info_publisher_ = create_publisher<sky360_camera::msg::ImageInfo>(image_info_publish_topic_, qos_profile_);
+            }
+            else if (param.get_name() == "camera_info_publish_topic")
+            {
+                camera_info_publish_topic_ = param.as_string();
+                camera_info_publisher_ = create_publisher<sky360_camera::msg::CameraInfo>(camera_info_publish_topic_, qos_profile_);
+            }
+            else if (param.get_name() == "is_video")
             {
                 is_video_ = param.as_bool();
             }
@@ -117,16 +138,6 @@ private:
                 video_path_ = param.as_string();
             }
         }
-    }
-
-    void declare_node_parameters()
-    {
-        std::vector<rclcpp::Parameter> params = {
-            rclcpp::Parameter("is_video", false),
-            rclcpp::Parameter("camera_id", 0),
-            rclcpp::Parameter("video_path", "")
-        };
-        declare_parameters(params);
     }
 
     inline void open_camera()
@@ -261,7 +272,7 @@ private:
 int main(int argc, char **argv)
 {
     rclcpp::init(argc, argv);
-    auto image_publisher =WebCameraPublisher::create();
+    auto image_publisher = WebCameraVideo::create();
     image_publisher->start_publishing();
     rclcpp::shutdown();
     return 0;

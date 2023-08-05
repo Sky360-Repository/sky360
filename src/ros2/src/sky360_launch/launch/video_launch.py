@@ -8,10 +8,14 @@ def generate_launch_description():
     return LaunchDescription([
         Node(
             package='sky360_camera',
-            executable='web_camera_publisher_node',
-            name='web_camera_publisher_node',
+            executable='web_camera_video_node',
+            name='web_camera_video_node',
             output='screen',
-            parameters=[{'is_video': True}, {'video_path': video_file}]
+            parameters=[{'image_publish_topic': 'sky360/camera/all_sky/bayer'}
+                        , {'image_info_publish_topic': 'sky360/camera/all_sky/image_info'}
+                        , {'camera_info_publish_topic': 'sky360/camera/all_sky/camera_info'}
+                        , {'is_video': True}
+                        , {'video_path': video_file}]
         ),
         # Node(
         #     package='sky360_image_processing',

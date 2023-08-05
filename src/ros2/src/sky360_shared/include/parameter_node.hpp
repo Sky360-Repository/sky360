@@ -2,9 +2,11 @@
 #ifndef __PARAMETER_NODE_H__
 #define __PARAMETER_NODE_H__
 
-#include "rclcpp/rclcpp.hpp"
-#include "rclcpp/rclcpp.hpp"
-#include "rcl_interfaces/msg/set_parameters_result.hpp"
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
+
+#include <rclcpp/rclcpp.hpp>
+#include <rcl_interfaces/msg/set_parameters_result.hpp>
 
 class ParameterNode
     : public rclcpp::Node
@@ -25,6 +27,12 @@ protected:
         {
             declare_parameter(param.get_name(), param.get_parameter_value());
         }
+    }
+
+    static std::string generate_uuid()
+    {
+        boost::uuids::random_generator uuid_generator;
+        return boost::uuids::to_string(uuid_generator());
     }
 
 private:

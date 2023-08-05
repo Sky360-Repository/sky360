@@ -5,10 +5,14 @@ def generate_launch_description():
     return LaunchDescription([
         Node(
             package='sky360_camera',
-            executable='web_camera_publisher_node',
-            name='web_camera_publisher_node',
+            executable='web_camera_video_node',
+            name='web_camera_video_node',
             output='screen',
-            parameters=[{'is_video': False}, {'camera_id': 0}]
+            parameters=[{'image_publish_topic': 'sky360/camera/all_sky/bayer'}
+            , {'image_info_publish_topic': 'sky360/camera/all_sky/image_info'}
+            , {'camera_info_publish_topic': 'sky360/camera/all_sky/camera_info'}
+            , {'is_video': False}
+            , {'camera_id': 0}]
         ),
         # Node(
         #     package='sky360_image_processing',
@@ -39,7 +43,7 @@ def generate_launch_description():
         #     executable='frame_viewer_node',
         #     name='frame_viewer_node',
         #     output='screen',
-        #     parameters=[{"topics": ["sky360/frames/all_sky/masked", "sky360/frames/all_sky/foreground_mask"]}]
+        #     parameters=[{"topics": ["sky360/camera/all_sky/bayer", "sky360/frames/all_sky/foreground_mask"]}]
         # ),
         Node(
             package='sky360_visualizers',

@@ -51,10 +51,10 @@ ENDIF()
 rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME} "rosidl_typesupport_cpp")
 # End package definition
 
-# All Sky Publisher Node
-add_executable(all_sky_publisher_node src/all_sky_publisher.cpp)
-target_link_libraries(all_sky_publisher_node PUBLIC sky360lib "${cpp_typesupport_target}")
-ament_target_dependencies(all_sky_publisher_node PUBLIC
+# QhyNode
+add_executable(qhy_node src/qhy_node.cpp)
+target_link_libraries(qhy_node PUBLIC sky360lib "${cpp_typesupport_target}")
+ament_target_dependencies(qhy_node PUBLIC
     rclcpp 
     sensor_msgs 
     std_msgs
@@ -62,12 +62,12 @@ ament_target_dependencies(all_sky_publisher_node PUBLIC
     rcl_interfaces 
     OpenCV
     Boost)
-install(TARGETS all_sky_publisher_node DESTINATION lib/${PROJECT_NAME})
+install(TARGETS qhy_node DESTINATION lib/${PROJECT_NAME})
 
-# Web Camera Publisher Node
-add_executable(web_camera_publisher_node src/web_camera_publisher.cpp)
-target_link_libraries(web_camera_publisher_node PUBLIC sky360lib "${cpp_typesupport_target}")
-ament_target_dependencies(web_camera_publisher_node PUBLIC
+# Web Camera Video Node
+add_executable(web_camera_video_node src/web_camera_video.cpp)
+target_link_libraries(web_camera_video_node PUBLIC sky360lib "${cpp_typesupport_target}")
+ament_target_dependencies(web_camera_video_node PUBLIC
     rclcpp 
     sensor_msgs 
     std_msgs
@@ -75,6 +75,6 @@ ament_target_dependencies(web_camera_publisher_node PUBLIC
     rcl_interfaces 
     OpenCV
     Boost)
-install(TARGETS web_camera_publisher_node DESTINATION lib/${PROJECT_NAME})
+install(TARGETS web_camera_video_node DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
