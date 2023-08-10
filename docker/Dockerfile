@@ -157,6 +157,7 @@ ENV PYTHONPATH=$PYTHONPATH:/opt/sky360lib/build/lib
 FROM ubuntu:22.04 AS sky360lib-app
 # Copy the compiled libs
 COPY --from=sky360lib /usr/local/ /usr/local/
+COPY --from=sky360lib /opt/sky360lib/install_app.sh /root
 COPY --from=qhy /opt/sdk_qhy /opt/sdk_qhy/
 # install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -170,6 +171,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get autoclean && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 ENV PYTHONPATH=$PYTHONPATH:/usr/lib/python3/dist-packages/cv2/python-3.10/:/opt/sky360lib/build/lib
+WORKDIR /root
 
 
 ###################################################################
@@ -233,6 +235,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
 #    && cmake --install . \
    # 
    && rosdep init || echo "rosdep already initialized" \
+   && rosdep update \
    && groupadd --gid $USER_GID $USERNAME \
    && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
    # [Optional] Add sudo support for the non-root user
@@ -253,6 +256,7 @@ ENV ROS_VERSION=2
 WORKDIR /opt/ros2_ws
 RUN mkdir -p /opt/ros2_ws/src \
    && git clone https://github.com/ros-perception/vision_opencv.git \
+   && bash /opt/ros/${ROS_DISTRO}/setup.bash \
    && rosdep update \
    && rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -y \
    && colcon build --allow-overriding cv_bridge
