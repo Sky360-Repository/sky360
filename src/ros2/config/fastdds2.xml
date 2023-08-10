@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- profile from: https://fast-dds.docs.eprosima.com/en/latest/fastdds/xml_configuration/example.html -->
+<dds xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles">
+    <profiles>
+        <transport_descriptors>
+            <!-- SHM sample transport descriptor -->
+            <transport_descriptor>
+                <transport_id>SHM_SAMPLE_DESCRIPTOR</transport_id>
+                <type>SHM</type>                <!-- REQUIRED -->
+                <maxMessageSize>33554432</maxMessageSize>                <!-- OPTIONAL uint32 valid of all transports-->
+                <segment_size>33554432</segment_size>                <!-- OPTIONAL uint32 SHM only-->
+                <port_queue_capacity>1024</port_queue_capacity>                <!-- OPTIONAL uint32 SHM only-->
+                <healthy_check_timeout_ms>250</healthy_check_timeout_ms>                <!-- OPTIONAL uint32 SHM only-->
+                <rtps_dump_file>test_file.dump</rtps_dump_file>                <!-- OPTIONAL string SHM only-->
+            </transport_descriptor>
+        </transport_descriptors>
+
+        <participant profile_name="participant_profile_example" is_default_profile="true">
+            <rtps>
+                <name>Participant Name</name>                <!-- String -->
+
+                <ignore_non_matching_locators>true</ignore_non_matching_locators>
+                <sendSocketBufferSize>8192</sendSocketBufferSize>
+                <listenSocketBufferSize>8192</listenSocketBufferSize>
+
+                <participantID>99</participantID>
+
+                <userTransports>
+                    <transport_id>SHM_SAMPLE_DESCRIPTOR</transport_id>
+                </userTransports>
+
+                <useBuiltinTransports>false</useBuiltinTransports>
+            </rtps>
+        </participant>
+
+        <data_writer profile_name="default publisher profile" is_default_profile="true">
+            <topic>
+                <historyQos>
+                    <kind>KEEP_LAST</kind>
+                    <depth>2</depth>
+                </historyQos>
+            </topic>
+            <qos>                <!-- dataWriterQosPoliciesType -->
+                <data_sharing>
+                    <kind>AUTOMATIC</kind>
+                </data_sharing>
+                <disable_heartbeat_piggyback>true</disable_heartbeat_piggyback>
+                <durability>
+                    <kind>VOLATILE</kind>
+                </durability>
+                <ownership>
+                    <kind>SHARED</kind>
+                </ownership>
+                <publishMode>
+                    <kind>ASYNCHRONOUS</kind>
+                </publishMode>
+                <reliability>
+                    <kind>BEST_EFFORT</kind>
+                </reliability>
+            </qos>
+
+            <historyMemoryPolicy>DYNAMIC</historyMemoryPolicy>
+        </data_writer>
+
+        <data_reader profile_name="default subscription profile" is_default_profile="true">
+            <topic>
+                <historyQos>
+                    <kind>KEEP_LAST</kind>
+                    <depth>2</depth>
+                </historyQos>
+            </topic>
+            <qos>                <!-- dataReaderQosPoliciesType -->
+                <data_sharing>
+                    <kind>AUTOMATIC</kind>
+                </data_sharing>
+                <durability>
+                    <kind>VOLATILE</kind>
+                </durability>
+                <ownership>
+                    <kind>SHARED</kind>
+                </ownership>
+                <reliability>
+                    <kind>BEST_EFFORT</kind>
+                </reliability>
+            </qos>
+        </data_reader>
+
+        <topic profile_name="/sky360/camera/all_sky/bayer">
+            <historyQos>
+                <kind>KEEP_LAST</kind>
+                <depth>2</depth>
+            </historyQos>
+            <resourceLimitsQos>
+                <max_samples>5</max_samples>
+                <max_instances>2</max_instances>
+                <max_samples_per_instance>1</max_samples_per_instance>
+                <allocated_samples>20</allocated_samples>
+                <extra_samples>10</extra_samples>
+            </resourceLimitsQos>
+        </topic>
+    </profiles>
+
+</dds>

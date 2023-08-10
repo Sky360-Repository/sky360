@@ -54,7 +54,9 @@ public:
             header.frame_id = generate_uuid();
 
             auto image_msg = cv_bridge::CvImage(header, msg_bayer_format_str_, image).toImageMsg();
-            image_publisher_->publish(*image_msg);
+            auto borrow_msg = image_publisher_->borrow_loaned_message();
+            borrow_msg.get() = *image_msg;
+            image_publisher_->publish(std::move(borrow_msg));
 
             auto image_info_msg = generate_image_info(header, camera_params);
             image_info_publisher_->publish(image_info_msg);
