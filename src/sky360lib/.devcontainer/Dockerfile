@@ -10,7 +10,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
         python3-pip \
         wget \
         git \
-        libusb-1.0-0-dev \
+        libusb-1.0-0-dev && \
     ln -s /usr/bin/python3 /usr/bin/python && \
     apt-get autoclean && apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp

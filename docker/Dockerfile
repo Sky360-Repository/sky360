@@ -126,8 +126,8 @@ FROM ubuntu:22.04 as qhy
 RUN apt-get update && apt-get install -y --no-install-recommends wget tar \
     && cd /opt \
     && TMPDIR=/opt \
-    && AMD64_LINK=https://www.qhyccd.com/file/repository/publish/SDK/230228/sdk_linux64_23.02.28.tgz \
-    && ARM64_LINK=https://www.qhyccd.com/file/repository/publish/SDK/230228/sdk_Arm64_23.02.28.tgz \
+    && AMD64_LINK=https://www.qhyccd.com/file/repository/publish/SDK/230509/sdk_linux64_23.05.09.tgz \
+    && ARM64_LINK=https://www.qhyccd.com/file/repository/publish/SDK/230509/sdk_Arm64_23.05.09.tgz \
     # detect
     && if [ "$(uname -m)" = "x86_64" ]; then \
         DOWNLOAD_LINK=$AMD64_LINK; \
