@@ -28,13 +28,12 @@ TBD
 ## Contributing to Sky360.org
 Please take a look at our [contributing.md](./contributing.md)
 
-## System Architecture
+## System Architecture - WIP
 The Sky360.org system follows a modular architecture, allowing different components to communicate and work together seamlessly. The primary components of the system include:
 
 1. **Fisheye Camera**: The fisheye camera captures a wide field of view, enabling a comprehensive observation of the skies.
-2. **Background Subtraction**: The background subtraction module filters out static elements in the captured images, focusing on detecting moving objects against the sky's background.
-3. **Object Detection**: This module employs computer vision techniques to identify and track potential UAP or other interesting objects within the observed images.
-4. **OpenMCT**: OpenMCT (Open Mission Control Technologies) is utilized on the client side for visualizing and analyzing the collected data in a user-friendly manner.
+2. **Recorder**: Designed to record raw data from sensors as well as situational awarness. Currently in developement for the fisheye camera.
+3. **OpenMCT**: OpenMCT (Open Mission Control Technologies) is utilized on the client side for visualizing and analyzing the collected data in a user-friendly manner.
 
 The modular architecture of Sky360.org allows for flexibility and scalability. Additional components can be added in future versions to enhance the system's capabilities. The communication between the components is facilitated through ROS2, ensuring seamless integration and interoperability.
 
