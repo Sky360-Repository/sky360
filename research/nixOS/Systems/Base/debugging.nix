@@ -1,6 +1,8 @@
-{ config, pkgs, ... }:
-
 {
+  config,
+  pkgs,
+  ...
+}: {
   environment.systemPackages = with pkgs; [
     helix
     nil
@@ -9,7 +11,6 @@
     btop
     tmux
     lsd
-    exa
     bat
     wget
     neofetch
