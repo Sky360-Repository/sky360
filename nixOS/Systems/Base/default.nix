@@ -14,7 +14,10 @@
 
   # networking.networkmanager.enable = true;
 
-  services.openssh.enable = true;
+  services.openssh = {
+    enable = true;
+    passwordAuthentication = false; # disable ssh with password
+  };
 
   system.stateVersion = "23.11";
 }

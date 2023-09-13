@@ -30,6 +30,7 @@
 *.rar
 *.tar
 *.zip
+*.zst
 
 # External sources #
 ####################

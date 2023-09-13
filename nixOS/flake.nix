@@ -25,7 +25,7 @@
     ...
   }: let
     # nixpkgs.config.allowUnfree = true;
-    in {
+  in {
     nixosConfigurations = {
       cyclop-orange_pi_5_plus = import "${nixpkgs}/nixos/lib/eval-config.nix" rec {
         system = "aarch64-linux";
@@ -47,7 +47,6 @@
         ];
       };
     };
-    
 
     packages = {
       aarch64 = {
@@ -70,6 +69,14 @@
             }
           ];
         };
+
+        # system = "x86_64-linux";
+        #  modules = [
+        #    #Hardware/x86_64.nix
+        #    (Systems/Base)
+        #    Systems/fisheye.nix
+        #  ];
+        #  format = "iso";
       };
     };
   };

@@ -1,16 +1,17 @@
-{ config, pkgs, ... }:
-
 {
-  imports =
-    [
-      ./snick.nix
-    ];
+  config,
+  pkgs,
+  ...
+}: {
+  imports = [
+    ./snick.nix
+  ];
 
   users.users.sky360 = {
     isNormalUser = true;
     home = "/home/sky360";
     initialPassword = "sky360";
-    extraGroups = [ "networkmanager" "wheel" "video" "audio" "plugdev" "dialout" ];
+    extraGroups = ["networkmanager" "video" "audio" "plugdev" "wheel"];
     #packages = with pkgs; [
     #];
   };
