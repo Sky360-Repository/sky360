@@ -1,6 +1,7 @@
 {
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-unstable";
+    # nixpkgs.url = "nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:realsnick/nixpkgs";
     nixos-generators = {
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -23,8 +24,8 @@
     # mesa-panfork,
     ...
   }: let
-    # system = "aarch64-linux";
-  in {
+    # nixpkgs.config.allowUnfree = true;
+    in {
     nixosConfigurations = {
       cyclop-orange_pi_5_plus = import "${nixpkgs}/nixos/lib/eval-config.nix" rec {
         system = "aarch64-linux";
@@ -34,6 +35,9 @@
           (nixos-rk3588 + "/modules/boards/orangepi5plus.nix")
           Systems/Base
           Systems/cyclop.nix
+          {
+            networking.hostName = "cyclop-orange_pi_5_plus";
+          }
           # {
           # sdImage = {
           # imageName = "sky360-cyclop-orange_pi_5_plus.img";
@@ -43,6 +47,7 @@
         ];
       };
     };
+    
 
     packages = {
       aarch64 = {
