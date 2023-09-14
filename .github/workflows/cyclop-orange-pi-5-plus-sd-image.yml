@@ -17,5 +17,7 @@ jobs:
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
         # If you chose API tokens for write access OR if you have a private cache
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
     - run: nix build --option system aarch64 ./nixOS#cyclop-orange_pi_5_plus-sd_image
     - run: nix-shell --run "echo OK"
