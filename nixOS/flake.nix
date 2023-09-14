@@ -8,8 +8,8 @@
     };
 
     # nixos-rk3588.url = "github:ryan4yin/nixos-rk3588";
-    nixos-rk3588.url = "github:realsnick/nixos-rk3588";
-    #nixos-rk3588.url = "/home/snick/Code/github/nixos-rk3588";
+    # nixos-rk3588.url = "github:realsnick/nixos-rk3588";
+    nixos-rk3588.url = "/home/snick/Code/github/nixos-rk3588";
 
     # mesa-panfork = {
     # url = "gitlab:panfork/mesa/csf";
@@ -25,7 +25,6 @@
     ...
   }: let
     version = "0.2.0";
-    # nixpkgs.config.allowUnfree = true;
   in {
     nixosConfigurations = {
       cyclop-orange_pi_5_plus = import "${nixpkgs}/nixos/lib/eval-config.nix" rec {
@@ -40,7 +39,7 @@
           }
           {
             sdImage = {
-              imageName = "sky360-cyclop-orangepi5plus-${version}";
+              imageName = "sky360-cyclop-${version}-orangepi5plus";
             };
           }
         ];
@@ -58,7 +57,7 @@
           }
           {
             sdImage = {
-              imageName = "sky360-cyclop-orangepi5-${version}";
+              imageName = "sky360-cyclop-${version}-orangepi5";
             };
           }
         ];
@@ -76,7 +75,24 @@
           }
           {
             sdImage = {
-              imageName = "sky360-cyclop-rock5-${version}";
+              imageName = "sky360-cyclop-${version}-rock5a";
+            };
+          }
+        ];
+      };
+
+      cyclop-x86_64 = import "${nixpkgs}/nixos/lib/eval-config.nix" rec {
+        system = "x86_64-linux";
+        specialArgs = inputs;
+        modules = [
+          Systems/Base
+          Systems/cyclop.nix
+          {
+            networking.hostName = "cyclop-x86_64_linux";
+          }
+          {
+            sdImage = {
+              imageName = "sky360-cyclop-${version}-x86_64-linux";
             };
           }
         ];
@@ -102,20 +118,27 @@
             Systems/cyclop.nix
             {
               sdImage = {
-                imageName = "sky360-cyclop-rpi4-${version}.img";
+                imageName = "sky360-cyclop-${version}-rpi4.img";
                 #compressImage = false;
               };
             }
           ];
         };
 
-        # system = "x86_64-linux";
-        #  modules = [
-        #    #Hardware/x86_64.nix
-        #    (Systems/Base)
-        #    Systems/fisheye.nix
-        #  ];
-        #  format = "iso";
+        cyclop-x86_64-linux-sd_image = nixos-generators.nixosGenerate {
+          system = "aarch64-linux";
+          format = "iso";
+          modules = [
+            Systems/Base
+            Systems/cyclop.nix
+            {
+              sdImage = {
+                imageName = "sky360-cyclop-${version}-x86_64-linux.img";
+                #compressImage = false;
+              };
+            }
+          ];
+        };
       };
     };
   };

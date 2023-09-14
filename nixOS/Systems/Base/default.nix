@@ -4,6 +4,7 @@
   ...
 }: {
   imports = [
+    ./nix.nix
     ./enviornment.nix
     ./debugging.nix
     ./docker.nix
@@ -20,5 +21,5 @@
     # settings.passwordAuthentication = false; # disable ssh with password
   };
 
-  system.stateVersion = "23.11";
+  # system.stateVersion = "23.11";
 }
