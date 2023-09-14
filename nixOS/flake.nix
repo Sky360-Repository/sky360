@@ -8,8 +8,8 @@
     };
 
     # nixos-rk3588.url = "github:ryan4yin/nixos-rk3588";
-    # nixos-rk3588.url = "github:realsnick/nixos-rk3588";
-    nixos-rk3588.url = "/home/snick/Code/github/nixos-rk3588";
+    nixos-rk3588.url = "github:realsnick/nixos-rk3588";
+    # nixos-rk3588.url = "/home/snick/Code/github/nixos-rk3588";
 
     # mesa-panfork = {
     # url = "gitlab:panfork/mesa/csf";
