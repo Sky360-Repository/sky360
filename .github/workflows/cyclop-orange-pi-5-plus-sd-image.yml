@@ -4,7 +4,7 @@ on:
   push:
 jobs:
   tests:
-    runs-on: macos-lates #ubuntu-latest #self-hosted
+    runs-on: self-hosted #macos-lates #ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - uses: cachix/install-nix-action@v20
