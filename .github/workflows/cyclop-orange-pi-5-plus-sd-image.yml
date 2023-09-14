@@ -1,24 +1,70 @@
+# Copyright 2022 Katia Esposito, Ido Samuelson
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 name: "Cyclop Orange Pi 5 Plus SD Image"
 on:
   pull_request:
   push:
 jobs:
   tests:
-    runs-on: self-hosted #macos-lates #ubuntu-latest
+    runs-on: self-hosted #ubuntu-latest #macos-latest #self-hosted
     steps:
-    - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v20
+    - name: Set variables useful for later
+      id: useful_vars
+      run: |-
+        echo "::set-output name=timestamp::$(date +%s)"
+        echo "::set-output name=short_sha::${GITHUB_SHA::8}"
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Docker meta
+      id: docker_meta
+      uses: docker/metadata-action@v4
       with:
+        images: ghcr.io/${{ github.repository }}-dev
+        tags: |
+          type=schedule
+          type=ref,event=branch
+          type=ref,event=pr
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=semver,pattern={{major}}
+          type=sha,prefix=,format=long,event=tag
+          type=sha
+          type=raw,value=latest,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
+          type=raw,value=${{ github.ref_name }}-${{ steps.useful_vars.outputs.short_sha }}-${{ steps.useful_vars.outputs.timestamp }},enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
+    - name: install nix
+      uses: cachix/install-nix-action@v20
+      with: 
         nix_path: nixpkgs=channel:nixos-unstable
-    - uses: cachix/cachix-action@v12
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+      with:
+        platforms: arm64
+    - name: Enable KVM group perms
+      run: |
+          sudo apt-get update
+          sudo apt-get install -y libvirt-clients libvirt-daemon-system libvirt-daemon virtinst bridge-utils qemu qemu-kvm qemu-system-x86 qemu-system-aarch64 udev 
+          sudo kvm-ok
+          # sudo modprobe -r kvm_intel
+          # sudo modprobe kvm_intel nested=1
+          # echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          # sudo udevadm control --reload-rules
+          # sudo udevadm trigger --name-match=kvm
+          # sudo systemctl enable libvirtd
+          # sudo systemctl start libvirtd
+          # sudo systemctl status libvirtd
+          # sudo usermod -a -G kvm,libvirt $USER
+    - name: setup cachix
+      uses: cachix/cachix-action@v12
       with:
         name: sky360
         # If you chose signing key for write access
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
         # If you chose API tokens for write access OR if you have a private cache
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - name: Set up QEMU
-      with:
-        platforms: arm64
-      uses: docker/setup-qemu-action@v2
-    - run: nix build --option system aarch64 ./nixOS#cyclop-orange_pi_5_plus-sd_image
+    - run: |
+          # TODO: put the version into the image filename cyclop-${version}-${board}-sd_image
+          nix build --option system aarch64 ./nixOS#cyclop-orange_pi_5_plus-sd_image
