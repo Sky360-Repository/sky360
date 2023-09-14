@@ -15,7 +15,7 @@ on:
     - "main"
 jobs:
   tests:
-    runs-on: macos-latest #ubuntu-latest #  self-hosted
+    runs-on: ubuntu-latest #macos-latest #  self-hosted
     steps:
     - uses: actions/checkout@v3
     - name: Set up QEMU
