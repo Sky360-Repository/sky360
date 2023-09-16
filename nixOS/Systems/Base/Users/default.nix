@@ -11,7 +11,7 @@
     isNormalUser = true;
     home = "/home/sky360";
     initialPassword = "sky360";
-    extraGroups = ["networkmanager" "video" "audio" "plugdev" "wheel"];
+    extraGroups = ["networkmanager" "video" "audio" "plugdev"];
     #packages = with pkgs; [
     #];
   };
