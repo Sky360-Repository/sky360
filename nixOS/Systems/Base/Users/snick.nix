@@ -12,18 +12,20 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ7ayPIBqQlTt2uTa0lrkUXC4Ou+rk+MG6fLn2OfATSb snick@sky360.org"
     ];
 
-    security.sudo.extraRules = [
-      {
-        users = ["snick"];
-        commands = [
-          {
-            command = "ALL";
-            options = ["NOPASSWD"]; # "SETENV" # Adding the following could be a good idea
-          }
-        ];
-      }
-    ];
     #packages = with pkgs; [
     #];
   };
+
+  # move to security module
+  security.sudo.extraRules = [
+    {
+      users = ["snick"];
+      commands = [
+        {
+          command = "ALL";
+          options = ["NOPASSWD"]; # "SETENV" # Adding the following could be a good idea
+        }
+      ];
+    }
+  ];
 }
