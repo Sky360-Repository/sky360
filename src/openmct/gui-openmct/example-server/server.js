@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * Basic implementation of a history and realtime server.
  */
