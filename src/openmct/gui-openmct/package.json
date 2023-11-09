@@ -4,14 +4,15 @@
   "description": "Tutorials for Open MCT",
   "main": "example-server/server.js",
   "scripts": {
-    "start": "node example-server/server.js"
+    "start": "node example-server/server.js",
+    "clean": "rm -rf node_modules package-lock.json"
+  },
+  "bin": {
+    "app": "example-server/server.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nasa/openmct-tutorial.git"
-  },
-  "bin": {
-    "app": "example-server/server.js"
   },
   "author": "",
   "license": "ISC",
@@ -20,9 +21,9 @@
   },
   "homepage": "https://github.com/nasa/openmct-tutorial#readme",
   "dependencies": {
-    "express": "4.18.2",
-    "express-ws": "4.0.0",
-    "openmct": "2.0.5",
-    "ws": "6.2.2"
+    "express": "^4.16.4",
+    "express-ws": "^4.0.0",
+    "openmct": "latest",
+    "ws": "^6.1.2"
   }
 }

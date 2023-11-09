@@ -10,10 +10,10 @@
         "version": "0.0.1",
         "license": "ISC",
         "dependencies": {
-          "express": "4.18.2",
-          "express-ws": "4.0.0",
-          "openmct": "2.0.5",
-          "ws": "6.2.2"
+          "express": "^4.16.4",
+          "express-ws": "^4.0.0",
+          "openmct": "latest",
+          "ws": "^6.1.2"
         },
         "bin": {
           "app": "example-server/server.js"
@@ -477,11 +477,11 @@
         }
       },
       "node_modules/openmct": {
-        "version": "2.0.5",
-        "resolved": "https://registry.npmjs.org/openmct/-/openmct-2.0.5.tgz",
-        "integrity": "sha512-iUaphiGnWqI0s2JidCDMDE+qk4JSytk2VWKqzDpt/I+Z7+BZwEXU1iZ7AVgS4hOw625hVUQLYShQTSqrT77StQ==",
+        "version": "3.0.2",
+        "resolved": "https://registry.npmjs.org/openmct/-/openmct-3.0.2.tgz",
+        "integrity": "sha512-gKCV0aLXGSyF4bJGPmQnR9I580KpsS6m8DaW3cSvdKGYNyd5d71CgjjXGU7MRe/c7dObXZo/J92WPT4OIerPKw==",
         "engines": {
-          "node": ">=14.19.1"
+          "node": ">=16.19.1 <20"
         }
       },
       "node_modules/parseurl": {
@@ -705,5 +705,5 @@
       }
     }
   },
-  "invalidationHash": "0f3c709e3c91b84f976f00851ed019ee6eb060d28b895ea795155ca68ab818e3"
+  "invalidationHash": "1e9d0c257fea73a9ba270244a84f1014d98aed1c89679e9a8d39d0895d72b925"
 }
