@@ -10,7 +10,7 @@ function Spacecraft() {
         "comms.sent": 0,
         "pwr.temp": 245,
         "pwr.c": 8.15,
-        "pwr.v": 25
+        "pwr.v": 30
     };
     this.history = {};
     this.listeners = [];
@@ -48,7 +48,7 @@ Spacecraft.prototype.updateState = function () {
     } else {
         this.state["pwr.c"] = this.state["pwr.c"] * 0.985;
     }
-    this.state["pwr.v"] = 25 + Math.pow(Math.random(), 3);  //math randomizer for mock data for climate control sample.  
+    this.state["pwr.v"] = 30 + Math.pow(Math.random(), 3);
 };
 
 /**

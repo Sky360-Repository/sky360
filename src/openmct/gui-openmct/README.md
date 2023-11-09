@@ -1,20 +1,33 @@
-<h3>GENERIC OPENMCT TUTORIAL</h3>
 # Open MCT Integration Tutorials
 
 These tutorials will walk you through the simple process of integrating your telemetry systems with Open MCT.  In case you don't have any telemetry systems, we've included a reference implementation of a historical and realtime server.  We'll take you through the process of integrating those services with Open MCT.
 
 ## Tutorial Prerequisites
 
+* [node.js](https://nodejs.org/en/)
+    * Mac OS: We recommend using [Homebrew](https://brew.sh/) to install node.
+    ```
+    $ brew install node
+    ```
+    * Windows: https://nodejs.org/en/download/
+    * linux: https://nodejs.org/en/download/
+* [git](https://git-scm.com/)
+    * Mac OS: If XCode is installed, git is likely to already be available from your command line. If not, git can be installed using [Homebrew](https://brew.sh/).
+    ```
+    $ brew install git
+    ```
+    * Windows: https://git-scm.com/downloads
+    * linux: https://git-scm.com/downloads
+
 Neither git nor node.js are requirements for using Open MCT, however this tutorial assumes that both are installed. Also, command line familiarity is a plus, however the tutorial is written in such a way that it should be possible to copy-paste the steps verbatim into a POSIX command line.
 
 ## Installing the tutorials
 
 ```
-1. git clone https://github.com/nasa/openmct-tutorial.git
-Skip step 1, as if you have cloned the gui-openmct repo, then you have already cloned this repo as well. 
-2. cd openmct-tutorial
-3. npm install
-4. npm start
+git clone https://github.com/nasa/openmct-tutorial.git
+cd openmct-tutorial
+npm install
+npm start
 ```
 
 This will clone the tutorials and install Open MCT from NPM.  It will also install the dependencies needed to run the provided telemetry server. The last command will start the server. The telemetry server provided is for demonstration purposes only, and is not intended to be used in a production environment.
@@ -31,8 +44,6 @@ Substituting the appropriate part and step numbers as necessary.
 
 The recommended way of following the tutorials is to checkout the first step (the command is shown below), and then follow the tutorial by manually adding the code, but if you do get stuck you can use the tags to skip ahead. If you do get stuck, please let us know by [filing in issue in this repository](https://github.com/nasa/openmct-tutorial/issues/new) so that we can improve the tutorials.
 
-All source files that you create while following this tutorial should be created in the `openmct-tutorial` directory, unless otherwise specified.
-
 ## Part A: Running Open MCT
 **Shortcut**: `git checkout -f part-a`
 
@@ -46,19 +57,21 @@ We're going to define a single `index.html` page.  We'll include the Open MCT li
     <title>Open MCT Tutorials</title>
     <script src="node_modules/openmct/dist/openmct.js"></script>
     <script src="lib/http.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            openmct.setAssetPath('node_modules/openmct/dist');
+            openmct.install(openmct.plugins.LocalStorage());
+            openmct.install(openmct.plugins.MyItems());
+            openmct.install(openmct.plugins.UTCTimeSystem());
+            openmct.time.clock('local', {start: -15 * 60 * 1000, end: 0});
+            openmct.time.timeSystem('utc');
+            openmct.install(openmct.plugins.Espresso());
+
+            openmct.start();
+        });
+    </script>
 </head>
 <body>
-    <script>
-        openmct.setAssetPath('node_modules/openmct/dist');
-        openmct.install(openmct.plugins.LocalStorage());
-        openmct.install(openmct.plugins.MyItems());
-        openmct.install(openmct.plugins.UTCTimeSystem());
-        openmct.time.clock('local', {start: -15 * 60 * 1000, end: 0});
-        openmct.time.timeSystem('utc');
-        openmct.install(openmct.plugins.Espresso());
-
-        openmct.start();
-    </script>
 </body>
 </html>
 ```
@@ -98,7 +111,6 @@ function DictionaryPlugin() {
     }
 };
 ```
-Note that when the `install` function is invoked, the [Open MCT API will be provided as the first parameter](https://github.com/nasa/openmct/blob/master/API.md#defining-and-installing-a-new-plugin). In this simple case we don't use it, so it has been left out.
 
 Next, we'll update index.html to include the file:
 
@@ -111,21 +123,23 @@ Next, we'll update index.html to include the file:
     <script src="node_modules/openmct/dist/openmct.js"></script>
     <script src="lib/http.js"></script>
     <script src="dictionary-plugin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            openmct.setAssetPath('node_modules/openmct/dist');
+            openmct.install(openmct.plugins.LocalStorage());
+            openmct.install(openmct.plugins.MyItems());
+            openmct.install(openmct.plugins.UTCTimeSystem());
+            openmct.time.clock('local', {start: -15 * 60 * 1000, end: 0});
+            openmct.time.timeSystem('utc');
+            openmct.install(openmct.plugins.Espresso());
+
+            openmct.install(DictionaryPlugin());
+
+            openmct.start();
+        });
+    </script>
 </head>
 <body>
-    <script>
-        openmct.setAssetPath('node_modules/openmct/dist');
-        openmct.install(openmct.plugins.LocalStorage());
-        openmct.install(openmct.plugins.MyItems());
-        openmct.install(openmct.plugins.UTCTimeSystem());
-        openmct.time.clock('local', {start: -15 * 60 * 1000, end: 0});
-        openmct.time.timeSystem('utc');
-        openmct.install(openmct.plugins.Espresso());
-
-        openmct.install(DictionaryPlugin());
-
-        openmct.start();
-    </script>
 </body>
 </html>
 ```
@@ -214,7 +228,7 @@ If we reload our browser now, the unknown object in our tree should be replaced 
 
 The root object uses the builtin type `folder`. For the objects representing the telemetry points for our spacecraft, we will now register a new object type.
 
-Snippet from [dictionary-plugin.js](https://github.com/nasa/openmct-tutorial/blob/part-c/dictionary-plugin.js#L65-L69)
+Snippet from [dictionary-plugin.js](https://github.com/nasa/openmct-tutorial/blob/part-c/dictionary-plugin.js#L63-L67)
 ```javascript
 openmct.types.addType('example.telemetry', {
     name: 'Example Telemetry Point',
@@ -283,7 +297,7 @@ Although we have now defined an Object Provider for both the "Example Spacecraft
 
 We have defined a root node in [Step 2](https://github.com/nasa/openmct-tutorial/blob/part-b-step-3/dictionary-plugin.js) and we have provided some objects that will appear in the tree. Now we will provide structure to the tree and define the relationships between objects in the tree. This is achieved with a __[Composition Provider](https://github.com/nasa/openmct/blob/master/API.md#composition-providers)__.
 
-Snippet from [dictionary-plugin.js](https://github.com/nasa/openmct-tutorial/blob/part-c/dictionary-plugin.js#L36-L52)
+Snippet from [dictionary-plugin.js](https://github.com/nasa/openmct-tutorial/blob/part-c/dictionary-plugin.js#L34-L50)
 ```javascript
 var compositionProvider = {
     appliesTo: function (domainObject) {
@@ -307,7 +321,7 @@ openmct.composition.addProvider(compositionProvider);
 ```
 A Composition Provider accepts a Domain Object, and provides identifiers for the children of that object. For the purposes of this tutorial we will return identifiers for the telemetry points available from our spacecraft. We build these from our spacecraft telemetry dictionary file.
 
-Our plugin should now look like this:
+Our plugin should now look like this -
 
 [dictionary-plugin.js](https://github.com/nasa/openmct-tutorial/blob/part-c/dictionary-plugin.js)
 ```javascript
@@ -441,22 +455,24 @@ With our adapter defined, we need to update `index.html` to include it.
     <script src="lib/http.js"></script>
     <script src="dictionary-plugin.js"></script>
     <script src="historical-telemetry-plugin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            openmct.setAssetPath('node_modules/openmct/dist');
+            openmct.install(openmct.plugins.LocalStorage());
+            openmct.install(openmct.plugins.MyItems());
+            openmct.install(openmct.plugins.UTCTimeSystem());
+            openmct.time.clock('local', {start: -15 * 60 * 1000, end: 0});
+            openmct.time.timeSystem('utc');
+            openmct.install(openmct.plugins.Espresso());
+
+            openmct.install(DictionaryPlugin());
+            openmct.install(HistoricalTelemetryPlugin());
+
+            openmct.start();
+        });
+    </script>
 </head>
 <body>
-    <script>
-        openmct.setAssetPath('node_modules/openmct/dist');
-        openmct.install(openmct.plugins.LocalStorage());
-        openmct.install(openmct.plugins.MyItems());
-        openmct.install(openmct.plugins.UTCTimeSystem());
-        openmct.time.clock('local', {start: -15 * 60 * 1000, end: 0});
-        openmct.time.timeSystem('utc');
-        openmct.install(openmct.plugins.Espresso());
-
-        openmct.install(DictionaryPlugin());
-        openmct.install(HistoricalTelemetryPlugin());
-
-        openmct.start();
-    </script>
 </body>
 </html>
 ```
@@ -521,23 +537,25 @@ With our realtime telemetry plugin defined, let's include it from `index.html`.
     <script src="dictionary-plugin.js"></script>
     <script src="historical-telemetry-plugin.js"></script>
     <script src="realtime-telemetry-plugin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            openmct.setAssetPath('node_modules/openmct/dist');
+            openmct.install(openmct.plugins.LocalStorage());
+            openmct.install(openmct.plugins.MyItems());
+            openmct.install(openmct.plugins.UTCTimeSystem());
+            openmct.time.clock('local', {start: -15 * 60 * 1000, end: 0});
+            openmct.time.timeSystem('utc');
+            openmct.install(openmct.plugins.Espresso());
+    
+            openmct.install(DictionaryPlugin());
+            openmct.install(HistoricalTelemetryPlugin());
+            openmct.install(RealtimeTelemetryPlugin());
+    
+            openmct.start();
+        });
+    </script>
 </head>
 <body>
-    <script>
-        openmct.setAssetPath('node_modules/openmct/dist');
-        openmct.install(openmct.plugins.LocalStorage());
-        openmct.install(openmct.plugins.MyItems());
-        openmct.install(openmct.plugins.UTCTimeSystem());
-        openmct.time.clock('local', {start: -15 * 60 * 1000, end: 0});
-        openmct.time.timeSystem('utc');
-        openmct.install(openmct.plugins.Espresso());
-
-        openmct.install(DictionaryPlugin());
-        openmct.install(HistoricalTelemetryPlugin());
-        openmct.install(RealtimeTelemetryPlugin());
-
-        openmct.start();
-    </script>
 </body>
 </html>
 ```
