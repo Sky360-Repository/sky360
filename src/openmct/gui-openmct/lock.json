@@ -1,12 +1,12 @@
 {
   "package-lock": {
-    "name": "openmct-tutorials",
+    "name": "sky360-openmct",
     "version": "0.0.1",
     "lockfileVersion": 3,
     "requires": true,
     "packages": {
       "": {
-        "name": "openmct-tutorials",
+        "name": "sky360-openmct",
         "version": "0.0.1",
         "license": "ISC",
         "dependencies": {
@@ -16,7 +16,7 @@
           "ws": "^6.1.2"
         },
         "bin": {
-          "app": "example-server/server.js"
+          "sky360_openmct": "src/server.js"
         }
       },
       "node_modules/accepts": {
@@ -705,5 +705,5 @@
       }
     }
   },
-  "invalidationHash": "1e9d0c257fea73a9ba270244a84f1014d98aed1c89679e9a8d39d0895d72b925"
+  "invalidationHash": "6190f66346eff2ca4558d419bf387c149900d17fe51f2dd6be80d9325563529c"
 }
