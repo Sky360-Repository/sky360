@@ -5,8 +5,8 @@
     dream2nix.modules.dream2nix.nodejs-granular-v3
   ];
 
-  name = "sky360_openmct";
-  version = "0.0.1";
+  name = "openmct";
+  version = "0.1.0";
 
   mkDerivation = {
     src = ./.;

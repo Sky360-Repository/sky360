@@ -2,9 +2,29 @@
   "nodes": {
     "dream2nix": {
       "inputs": {
-        "nixpkgs": "nixpkgs_4",
+        "nixpkgs": "nixpkgs",
         "purescript-overlay": "purescript-overlay",
         "pyproject-nix": "pyproject-nix"
+      },
+      "locked": {
+        "lastModified": 1700448730,
+        "narHash": "sha256-5dQTWQgCY1/XXDgxuYP1bT5S6rNdoukFRRmGdaL8uBw=",
+        "owner": "nix-community",
+        "repo": "dream2nix",
+        "rev": "427b5e94f4b57d35466c37bc962eb9122e6df2ad",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "dream2nix",
+        "type": "github"
+      }
+    },
+    "dream2nix_2": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_5",
+        "purescript-overlay": "purescript-overlay_2",
+        "pyproject-nix": "pyproject-nix_2"
       },
       "locked": {
         "lastModified": 1699600290,
@@ -17,24 +37,6 @@
       "original": {
         "owner": "nix-community",
         "repo": "dream2nix",
-        "type": "github"
-      }
-    },
-    "flake-parts": {
-      "inputs": {
-        "nixpkgs-lib": "nixpkgs-lib"
-      },
-      "locked": {
-        "lastModified": 1698882062,
-        "narHash": "sha256-HkhafUayIqxXyHH1X8d9RDl1M2CkFgZLjKD3MzabiEo=",
-        "owner": "hercules-ci",
-        "repo": "flake-parts",
-        "rev": "8c9fa2545007b49a5db5f650ae91f227672c3877",
-        "type": "github"
-      },
-      "original": {
-        "owner": "hercules-ci",
-        "repo": "flake-parts",
         "type": "github"
       }
     },
@@ -59,14 +61,14 @@
     "nix-ros-overlay": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1696981809,
-        "narHash": "sha256-Md7l1lRD3UwK3wtQLiGI9qFQovqBg1Qhnt4RwjiTxtM=",
+        "lastModified": 1700100417,
+        "narHash": "sha256-sTiFoNjXOXgdIB79DpNrSnc0ERv8ygi4FmMZQUGgWrw=",
         "owner": "lopsided98",
         "repo": "nix-ros-overlay",
-        "rev": "e3eba7bb67e60108ba22ce297d72e1a9ad71311f",
+        "rev": "734153d7c1a802f5603dbd99a68441d5a7ef80c4",
         "type": "github"
       },
       "original": {
@@ -98,11 +100,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1693791338,
-        "narHash": "sha256-wHmtB5H8AJTUaeGHw+0hsQ6nU4VyvVrP2P4NeCocRzY=",
+        "lastModified": 1696058303,
+        "narHash": "sha256-eNqKWpF5zG0SrgbbtljFOrRgFgRzCc4++TMFADBMLnc=",
         "owner": "nix-community",
         "repo": "nixos-generators",
-        "rev": "8ee78470029e641cddbd8721496da1316b47d3b4",
+        "rev": "150f38bd1e09e20987feacb1b0d5991357532fb5",
         "type": "github"
       },
       "original": {
@@ -113,7 +115,7 @@
     },
     "nixos-rk3588": {
       "inputs": {
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": "nixpkgs_3"
       },
       "locked": {
         "lastModified": 1694662978,
@@ -131,11 +133,27 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1696019113,
-        "narHash": "sha256-X3+DKYWJm93DRSdC5M6K5hLqzSya9BjibtBsuARoPco=",
+        "lastModified": 1695837737,
+        "narHash": "sha256-KcqmJ5hNacLuE7fkz5586kp/vt4NLo6+Prq3DMgrxpQ=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "517501bcf14ae6ec47efd6a17dda0ca8e6d866f9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1699099776,
+        "narHash": "sha256-X09iKJ27mGsGambGfkKzqvw5esP1L/Rf8H3u3fCqIiU=",
         "owner": "lopsided98",
         "repo": "nixpkgs",
-        "rev": "f5892ddac112a1e9b3612c39af1b72987ee5783a",
+        "rev": "85f1ba3e51676fa8cc604a3d863d729026a6b8eb",
         "type": "github"
       },
       "original": {
@@ -145,25 +163,7 @@
         "type": "github"
       }
     },
-    "nixpkgs-lib": {
-      "locked": {
-        "dir": "lib",
-        "lastModified": 1698611440,
-        "narHash": "sha256-jPjHjrerhYDy3q9+s5EAsuhyhuknNfowY6yt6pjn9pc=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "0cbe9f69c234a7700596e943bfae7ef27a31b735",
-        "type": "github"
-      },
-      "original": {
-        "dir": "lib",
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_2": {
+    "nixpkgs_3": {
       "locked": {
         "lastModified": 1691486536,
         "narHash": "sha256-W2jYTn6rNiJEpjXkOiZxNltgxxwgeZE5cQ967NgsrHU=",
@@ -179,13 +179,13 @@
         "type": "github"
       }
     },
-    "nixpkgs_3": {
+    "nixpkgs_4": {
       "locked": {
-        "lastModified": 1694654261,
-        "narHash": "sha256-Syu9Nwhcbc59wUVBaOTl5NZ5qAZqBDCFRE8n0fy2gzU=",
+        "lastModified": 1696244513,
+        "narHash": "sha256-b0uUQIByDHKCuB79HTfgouoUCawTfvjlYHMCVQJT12U=",
         "owner": "realsnick",
         "repo": "nixpkgs",
-        "rev": "c17b94b8591cb78637eda06694efb5d23f646094",
+        "rev": "1535295bc67572a4776fd9da2cdfe6231d19f8c8",
         "type": "github"
       },
       "original": {
@@ -194,7 +194,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_4": {
+    "nixpkgs_5": {
       "locked": {
         "lastModified": 1695837737,
         "narHash": "sha256-KcqmJ5hNacLuE7fkz5586kp/vt4NLo6+Prq3DMgrxpQ=",
@@ -213,11 +213,33 @@
     "purescript-overlay": {
       "inputs": {
         "nixpkgs": [
-          "sky360Packages",
           "dream2nix",
           "nixpkgs"
         ],
         "slimlock": "slimlock"
+      },
+      "locked": {
+        "lastModified": 1696022621,
+        "narHash": "sha256-eMjFmsj2G1E0Q5XiibUNgFjTiSz0GxIeSSzzVdoN730=",
+        "owner": "thomashoneyman",
+        "repo": "purescript-overlay",
+        "rev": "047c7933abd6da8aa239904422e22d190ce55ead",
+        "type": "github"
+      },
+      "original": {
+        "owner": "thomashoneyman",
+        "repo": "purescript-overlay",
+        "type": "github"
+      }
+    },
+    "purescript-overlay_2": {
+      "inputs": {
+        "nixpkgs": [
+          "sky360",
+          "dream2nix",
+          "nixpkgs"
+        ],
+        "slimlock": "slimlock_2"
       },
       "locked": {
         "lastModified": 1696022621,
@@ -249,40 +271,78 @@
         "type": "github"
       }
     },
+    "pyproject-nix_2": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1699067645,
+        "narHash": "sha256-SJOEPVFARVfS0qQQqbnGywt8uOZMmlV1PazQtGNNCfQ=",
+        "owner": "adisbladis",
+        "repo": "pyproject.nix",
+        "rev": "56b5a6ae1ac63a0a3a044d602a3b5d09a5d10dc0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "adisbladis",
+        "repo": "pyproject.nix",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
+        "dream2nix": "dream2nix",
         "nix-ros-overlay": "nix-ros-overlay",
         "nixos-generators": "nixos-generators",
         "nixos-rk3588": "nixos-rk3588",
-        "nixpkgs": "nixpkgs_3",
-        "sky360Packages": "sky360Packages"
+        "nixpkgs": "nixpkgs_4",
+        "sky360": "sky360"
       }
     },
-    "sky360Packages": {
+    "sky360": {
       "inputs": {
-        "dream2nix": "dream2nix",
-        "flake-parts": "flake-parts",
+        "dream2nix": "dream2nix_2",
         "nixpkgs": [
-          "sky360Packages",
+          "sky360",
           "dream2nix",
           "nixpkgs"
         ]
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-ElcWphIC+2CsCbHDiViz2qtwqe79RmzFkgSO7DP5rd4=",
-        "path": "/nix/store/hpp0rdv6995gl1ssns7j094jy52nmxp2-source/nixOS/dream2nix/packages/openmct",
+        "narHash": "sha256-GVgagftQPgi4o5EdU8OwnkI3QxJiiy+Po8SFBORztK0=",
+        "path": "/nix/store/2sys6dd6m4r7d3kx2ha0q1iyfcw5w42j-source/nixOS/dream2nix",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/hpp0rdv6995gl1ssns7j094jy52nmxp2-source/nixOS/dream2nix/packages/openmct",
+        "path": "/nix/store/2sys6dd6m4r7d3kx2ha0q1iyfcw5w42j-source/nixOS/dream2nix",
         "type": "path"
       }
     },
     "slimlock": {
       "inputs": {
         "nixpkgs": [
-          "sky360Packages",
+          "dream2nix",
+          "purescript-overlay",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1688610262,
+        "narHash": "sha256-Wg0ViDotFWGWqKIQzyYCgayeH8s4U1OZcTiWTQYdAp4=",
+        "owner": "thomashoneyman",
+        "repo": "slimlock",
+        "rev": "b5c6cdcaf636ebbebd0a1f32520929394493f1a6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "thomashoneyman",
+        "repo": "slimlock",
+        "type": "github"
+      }
+    },
+    "slimlock_2": {
+      "inputs": {
+        "nixpkgs": [
+          "sky360",
           "dream2nix",
           "purescript-overlay",
           "nixpkgs"

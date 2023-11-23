@@ -33,7 +33,7 @@
     package = pkgs.nixVersions.unstable;
     #registry.nixpkgs.flake = inputs.nixpkgs;
     extraOptions = ''
-      experimental-features = nix-command flakes
+      experimental-features = nix-command flakes repl-flake
       keep-outputs          = true
       keep-derivations      = true
     '';

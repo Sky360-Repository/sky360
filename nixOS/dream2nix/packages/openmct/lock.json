@@ -16,7 +16,7 @@
           "ws": "^6.1.2"
         },
         "bin": {
-          "sky360_openmct": "src/server.js"
+          "openmct": "src/server.js"
         }
       },
       "node_modules/accepts": {
@@ -477,9 +477,9 @@
         }
       },
       "node_modules/openmct": {
-        "version": "3.0.2",
-        "resolved": "https://registry.npmjs.org/openmct/-/openmct-3.0.2.tgz",
-        "integrity": "sha512-gKCV0aLXGSyF4bJGPmQnR9I580KpsS6m8DaW3cSvdKGYNyd5d71CgjjXGU7MRe/c7dObXZo/J92WPT4OIerPKw==",
+        "version": "3.1.1",
+        "resolved": "https://registry.npmjs.org/openmct/-/openmct-3.1.1.tgz",
+        "integrity": "sha512-BUc+lNPj8ENqbqEBcK48RdF/5QGz9m/qj12kea8LMHPaUOYsOt0IojGE9/nrkyYuEIeX7H3eqmo+X8smSF0p7A==",
         "engines": {
           "node": ">=16.19.1 <20"
         }
@@ -705,5 +705,5 @@
       }
     }
   },
-  "invalidationHash": "6190f66346eff2ca4558d419bf387c149900d17fe51f2dd6be80d9325563529c"
+  "invalidationHash": "0f739b7d77f1743dee2c79f8cb682ebcf65a73f67558d3594e40eaa04e9dc984"
 }

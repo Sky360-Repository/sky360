@@ -1,9 +1,10 @@
-{ ... }: {
+{ pkgs, sky360, ... }: {
+    imports = [
+        # ../../dream2nix/packages/openmct        
+        ../../dream2nix/packages/openmct/sky360mct_service.nix
+    ];
 
-  # imports = [
-  #   ./services/openmct.nix # TODO: move to the flake.nix of sky360
-  # ];
-  services.sky360.openmct = {
+    services.sky360.openmct = {
     enable = true;
     openFirewall = true;
     # TODO: need to test

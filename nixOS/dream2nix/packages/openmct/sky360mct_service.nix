@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, sky360, ... }:
 
 with lib;
 
@@ -6,18 +6,20 @@ let
   cfg = config.services.sky360.openmct;
   defaultUser = "openmct";
   defaultGroup = defaultUser;
-  sky360Packages.openmct = "${./flake.nix}.packages.sky360_openmct";
+  # FIXME: remove hardcoded system `aarch64-linux`
+  defaultPackage = sky360.packages.aarch64-linux.packages.openmct;
+  # defaultPackage = sky360.packages.openmct;
 in
 {
   options.services.sky360.openmct = {
     enable = mkEnableOption (mdDoc "Sky360's openMCT service");
 
-    # package = mkOption {
-    #   default = sky360Packages.openmct;
-    #   defaultText = literalExpression "sky360Packages.openmct";
-    #   type = types.package;
-    #   description = lib.mdDoc "openMCT package to use";
-    # };
+    package = mkOption {
+      default = defaultPackage;
+      defaultText = literalExpression "sky360.packages.openmct";
+      type = types.package;
+      description = lib.mdDoc "openMCT package to use";
+    };
 
     openFirewall = mkOption {
       type = types.bool; # NOTE: this is why nix language can not be dynamic and require a proper type system. I just don't get it sometimes...the compliation of the code won't slow down compare to a build....
@@ -70,17 +72,22 @@ in
       allowedTCPPorts = [ cfg.port ];
     };
 
+    environment.systemPackages = with pkgs; [
+      # cfg.package
+    ];
+
     systemd.services.openmct = {
       description = "Sky360 openMCT Service";
       wantedBy = [ "multi-user.target" ];
       after = [ "networking.target" ];
       environment = { HOME = cfg.userDir; };
+      path = [ cfg.package ];
       serviceConfig = mkMerge [{
         User = cfg.security.user;
         Group = cfg.security.group;
         # TODO: support --port and more params
         # ExecStart = "${sky360Packages.openmct}/bin/sky360_openmct --port $toString cfg.port}";
-        ExecStart = "${sky360Packages.openmct}/bin/sky360_openmct";
+        ExecStart = "${cfg.package}/bin/openmct";
         PrivateTmp = true;
         Restart = "always"; # TODO: write options
         WorkingDdddirectory = cfg.userDir;
