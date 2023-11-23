@@ -11,6 +11,7 @@
   environment.sessionVariables = {
     TERM = "xterm-256color";
     COLORTERM = "truecolor";
+    EDITOR= "hx";
   };
 
   #environment.systemPackages = with pkgs; [

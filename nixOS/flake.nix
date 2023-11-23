@@ -7,6 +7,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    
     # nixos-rk3588.url = "github:ryan4yin/nixos-rk3588";
     nixos-rk3588.url = "github:realsnick/nixos-rk3588";
     # nixos-rk3588.url = "/home/snick/Code/github/nixos-rk3588";
@@ -18,6 +19,7 @@
 
     nix-ros-overlay.url = "github:lopsided98/nix-ros-overlay";
     # nixpkgs.overlays = [ nix-ros-overlay.overlay ];
+    sky360Packages.url = "./dream2nix/packages/openmct";
   };
   outputs =
     inputs @ { self
@@ -26,6 +28,7 @@
     , nixos-rk3588
       #, mesa-panfork, #GPU support for the rk3588
     , nix-ros-overlay
+    , sky360Packages
     , ...
     }:
     let
@@ -40,7 +43,9 @@
             (nixos-rk3588 + "/modules/boards/orangepi5plus.nix")
             nix-ros-overlay.nixosModules.default
             Systems/Base
-            Systems/cyclop.nix
+            Systems/cyclop
+            dream2nix/packages/openmct/sky360mct_service.nix
+            Systems/Base/sky360mct.nix
             {
               networking.hostName = "cyclop-orange_pi_5_plus";
             }
@@ -59,7 +64,7 @@
             (nixos-rk3588 + "/modules/boards/orangepi5.nix")
             nix-ros-overlay.nixosModules.default
             Systems/Base
-            Systems/cyclop.nix
+            Systems/cyclop
             {
               networking.hostName = "cyclop-orange_pi_5";
             }
@@ -78,7 +83,7 @@
             (nixos-rk3588 + "/modules/boards/rock5a.nix")
             nix-ros-overlay.nixosModules.default
             Systems/Base
-            Systems/cyclop.nix
+            Systems/cyclop
             {
               networking.hostName = "cyclop-rock5a";
             }
@@ -96,7 +101,7 @@
           modules = [
             nix-ros-overlay.nixosModules.default
             Systems/Base
-            Systems/cyclop.nix
+            Systems/cyclop
             {
               networking.hostName = "cyclop-x86_64_linux";
             }
@@ -112,9 +117,7 @@
       packages = {
         aarch64 = {
           cyclop-orange_pi_5_plus-sd_image = self.nixosConfigurations.cyclop-orange_pi_5_plus.config.system.build.sdImage;
-
           cyclop-orange_pi_5-sd_image = self.nixosConfigurations.cyclop-orange_pi_5.config.system.build.sdImage;
-
           cyclop-rock5a-sd_image = self.nixosConfigurations.cyclop-rock5a.config.system.build.sdImage;
           ######
           # };
@@ -126,7 +129,7 @@
               Hardware/rpi-4.nix
               nix-ros-overlay.nixosModules.default
               Systems/Base
-              Systems/cyclop.nix
+              Systems/cyclop
               {
                 sdImage = {
                   imageName = "sky360-cyclop-${version}-rpi4.img";
@@ -142,7 +145,7 @@
             modules = [
               nix-ros-overlay.nixosModules.default
               Systems/Base
-              Systems/cyclop.nix
+              Systems/cyclop
               {
                 sdImage = {
                   imageName = "sky360-cyclop-${version}-x86_64-linux.img";

@@ -4,6 +4,10 @@
   lib,
   ...
 }: {
+
+  imports = [
+    ./networking.nix
+  ];
   environment.systemPackages = with pkgs; [
     indi-full
   ];
