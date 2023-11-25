@@ -7,7 +7,7 @@
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    
+
     # nixos-rk3588.url = "github:ryan4yin/nixos-rk3588";
     nixos-rk3588.url = "github:realsnick/nixos-rk3588";
     # nixos-rk3588.url = "/home/snick/Code/github/nixos-rk3588";
@@ -33,14 +33,14 @@
     , ...
     }:
     let
-      version = "0.2.0";
+      version = "0.3.1";
       lib = nixpkgs.lib;
     in
     {
       nixosConfigurations = {
         cyclop-orange_pi_5_plus = lib.nixosSystem {
           system = "aarch64-linux";
-          specialArgs = inputs ;
+          specialArgs = inputs;
           modules = [
             (nixos-rk3588 + "/modules/boards/orangepi5plus.nix")
             nix-ros-overlay.nixosModules.default

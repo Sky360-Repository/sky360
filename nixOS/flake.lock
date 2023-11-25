@@ -27,11 +27,11 @@
         "pyproject-nix": "pyproject-nix_2"
       },
       "locked": {
-        "lastModified": 1699600290,
-        "narHash": "sha256-WdCM7kvHhHPQf8QA9Q/DG8FXjm9C0Q6dxxg1Rd0gdSo=",
+        "lastModified": 1700448730,
+        "narHash": "sha256-5dQTWQgCY1/XXDgxuYP1bT5S6rNdoukFRRmGdaL8uBw=",
         "owner": "nix-community",
         "repo": "dream2nix",
-        "rev": "3f1cbc8e937b49dcf0fc9cc91b542af554b09013",
+        "rev": "427b5e94f4b57d35466c37bc962eb9122e6df2ad",
         "type": "github"
       },
       "original": {
@@ -309,11 +309,11 @@
       "locked": {
         "lastModified": 1,
         "narHash": "sha256-GVgagftQPgi4o5EdU8OwnkI3QxJiiy+Po8SFBORztK0=",
-        "path": "/nix/store/2sys6dd6m4r7d3kx2ha0q1iyfcw5w42j-source/nixOS/dream2nix",
+        "path": "/nix/store/rzslpdaznckm1f19rmmhnnzv53p5p6kr-source/nixOS/dream2nix",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/2sys6dd6m4r7d3kx2ha0q1iyfcw5w42j-source/nixOS/dream2nix",
+        "path": "/nix/store/rzslpdaznckm1f19rmmhnnzv53p5p6kr-source/nixOS/dream2nix",
         "type": "path"
       }
     },
