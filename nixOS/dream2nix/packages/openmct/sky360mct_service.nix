@@ -1,4 +1,4 @@
-{ config, lib, pkgs, sky360, ... }:
+{ config, lib, pkgs, sky360-dream2nix, ... }:
 
 with lib;
 
@@ -7,7 +7,7 @@ let
   defaultUser = "openmct";
   defaultGroup = defaultUser;
   # FIXME: remove hardcoded system `aarch64-linux`
-  defaultPackage = sky360.packages.aarch64-linux.packages.openmct;
+  defaultPackage = sky360-dream2nix.packages.aarch64-linux.packages.openmct;
   # defaultPackage = sky360.packages.openmct;
 in
 {
@@ -86,7 +86,7 @@ in
         User = cfg.security.user;
         Group = cfg.security.group;
         # TODO: support --port and more params
-        # ExecStart = "${sky360Packages.openmct}/bin/sky360_openmct --port $toString cfg.port}";
+        # ExecStart = "${sky360-dream2nix.openmct}/bin/sky360_openmct --port $toString cfg.port}";
         ExecStart = "${cfg.package}/bin/openmct";
         PrivateTmp = true;
         Restart = "always"; # TODO: write options

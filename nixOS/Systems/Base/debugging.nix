@@ -11,6 +11,7 @@
     btop
     tmux
     lsd
+    tree
     bat
     wget
     neofetch

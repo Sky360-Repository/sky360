@@ -15,9 +15,11 @@
         "https://cache.nixos.org/"
         "https://nix-community.cachix.org"
         "https://sky360.cachix.org"
+        "https://ros.cachix.org"
       ];
       trusted-public-keys = [
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "ros.cachix.org-1:dSyZxI8geDCJrwgvCOHDoAfOm5sV1wCPjBkKL+38Rvo="
         "sky360.cachix.org-1:/CVvRgdh1sEvexxzJ91HzFr/Sw3OTXZ7dxY/0VeqZ3c="
       ];
       auto-optimise-store = true; # Optimise syslinks

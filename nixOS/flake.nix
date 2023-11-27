@@ -19,7 +19,8 @@
 
     nix-ros-overlay.url = "github:lopsided98/nix-ros-overlay";
     # nixpkgs.overlays = [ nix-ros-overlay.overlay ];
-    sky360.url = "./dream2nix";
+    sky360-dream2nix.url = "./dream2nix";
+    # sky360-ros-packages.url = "./ros";
   };
   outputs =
     inputs @ { self
@@ -29,17 +30,36 @@
     , nixos-rk3588
       #, mesa-panfork, #GPU support for the rk3588
     , nix-ros-overlay
-    , sky360
+    , sky360-dream2nix
     , ...
     }:
     let
-      version = "0.2.0";
+      system = "aarch64-linux";
+      version = "0.3.0";
       lib = nixpkgs.lib;
+
+      sky360-ros-packages-overlay = (final: prev: {
+        sky360-ros-iron-heartbeat = prev.callPackage ./ros/iron/heartbeat {};
+      });
+      sky360-ros-overlay = (self: super: {
+        rosPackages = super.rosPackages // {
+          iron = super.rosPackages.iron.overrideScope sky360-ros-packages-overlay;
+        };
+      });
     in
     {
       nixosConfigurations = {
         cyclop-orange_pi_5_plus = lib.nixosSystem {
-          system = "aarch64-linux";
+          inherit system;
+          pkgs = import nixpkgs {
+            inherit system;
+            config.allowUnfree = true;
+            overlays = [
+              nix-ros-overlay.overlays.default
+              sky360-ros-overlay
+            ];
+          };
+          # legacyPackages = self.pkgs.rosPackages;
           specialArgs = inputs ;
           modules = [
             (nixos-rk3588 + "/modules/boards/orangepi5plus.nix")
