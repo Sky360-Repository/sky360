@@ -5,7 +5,7 @@
   imports = [
     ./nix.nix
     ./enviornment.nix
-    ./debugging.nix
+    (./debugging)
     ./ros2.nix
     ./docker.nix
     ./Users

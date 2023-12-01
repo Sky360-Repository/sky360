@@ -1,0 +1,63 @@
+// theme "dracula"
+theme "one-half-dark"
+layout name="sky360" {
+    default_tab_template {
+        pane size=1 borderless=true {
+            plugin location="zellij:tab-bar"
+        }
+        children
+        // TODO: figure out how to show/hide a pane
+        // pane size=2 borderless=true {
+        //     plugin location="zellij:status-bar"
+        // }
+    }
+
+    tab name="Sky360-Dev" focus=true hide_floating_panes=true {
+        pane split_direction="vertical" {
+            pane name="editor" borderless=true {
+                edit "."
+            }
+        }
+        pane split_direction="vertical" size=8 {
+            pane name="cargo run" borderless=true {
+                command "cargo" 
+                args "run"
+            } 
+            pane size="20%" borderless=true
+        }
+        // floating_panes {
+        //     pane {
+        //         x "10%"
+        //         y "10%"
+        //         width "80%"
+        //         height "80%"
+        //         command "btop"
+        //     }
+        // }
+    }
+    tab name="terminal" {
+        pane {
+            borderless true
+        }
+    }
+    // tab name="browser" {
+    //     pane {
+    //         command "w3m"
+    //         args "https://search.nixos.org/packages"
+    //         borderless true
+    //     }
+    // }
+    tab name="btop" {
+        pane {
+            command "btop"
+            borderless true
+        }
+    }
+}
+
+keybinds {
+    shared {
+        bind "Alt 1" { Run "git" "status"; }
+        bind "Alt 2" { Run "git" "diff"; }
+    }
+}

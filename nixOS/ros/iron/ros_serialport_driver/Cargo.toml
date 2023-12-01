@@ -1,0 +1,16 @@
+[package]
+name = "ros_serialport_driver"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+clap = { version = "4.4.10", features = ["derive"] }
+env_logger = "0.10.1"
+libc = "0.2.150"
+log = "0.4.20"
+num-traits = "0.2.17"
+pid = "4.0.0"
+serialport = "4.2.2"
+signal-hook = "0.3.17"

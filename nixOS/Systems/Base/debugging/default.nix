@@ -3,6 +3,10 @@
   pkgs,
   ...
 }: {
+
+  imports = [
+    ./helix.nix
+  ];
   environment.systemPackages = with pkgs; [
     helix
     nil
