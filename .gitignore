@@ -66,16 +66,17 @@ $RECYCLE.BIN/
 *.user
 *.sln.docstates
 .idea/
-.direnv
 # Build results #
 #################
 [Dd]ebug/
 [Rr]elease/
 x64/
 build*/
+target*/
 cmake-build*/
 [Bb]in/
 [Oo]bj/
 install*/
 log*/
 result
+result-bin

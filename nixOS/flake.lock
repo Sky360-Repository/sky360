@@ -308,12 +308,12 @@
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-Purq3HBfeOwPjCRktcjdI2PWnKgPTEjSLFh408W+HTY=",
-        "path": "/nix/store/q3kd0ybx5z9am7l9nxspjk10rvk1y7v6-source/nixOS/dream2nix",
+        "narHash": "sha256-QAeCaqFUuyDFYYBbnXxHQcA5EHzTY6HsT6aA+zQ3HOY=",
+        "path": "/nix/store/is2hnyyj1khn8w7lkv8816a5bnshwbyk-source/nixOS/dream2nix",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/q3kd0ybx5z9am7l9nxspjk10rvk1y7v6-source/nixOS/dream2nix",
+        "path": "/nix/store/is2hnyyj1khn8w7lkv8816a5bnshwbyk-source/nixOS/dream2nix",
         "type": "path"
       }
     },

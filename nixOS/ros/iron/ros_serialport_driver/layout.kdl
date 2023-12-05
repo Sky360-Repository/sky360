@@ -20,8 +20,8 @@ layout name="sky360" {
         }
         pane split_direction="vertical" size=8 {
             pane name="cargo run" borderless=true {
-                command "cargo" 
-                args "run"
+                // command "cargo" 
+                // args "run"
             } 
             pane size="20%" borderless=true
         }

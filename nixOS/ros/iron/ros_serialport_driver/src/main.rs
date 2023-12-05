@@ -22,7 +22,7 @@ const TIMEOUT: u64 = 1000; // ms
 //TODO: ros2
 //      we need to ensure the message timestamp = ros timestamp
 //TODO: mmf recorder
-//TODO: how to deal with time??? -
+//TODO: how to deal incoming messages ??? -
 //      start with #2 - file per read and continue with #3 to improve performance and diskspace usage
 
 // 1. file + timestamp per message
@@ -30,6 +30,7 @@ const TIMEOUT: u64 = 1000; // ms
 //    this is not as simple as we can receive multiple messages per read
 // *2. file + timestamp per read
 //    this is aligned with the time requirements as the multiple messages were received at the same time.
+//    [8 bytes timestamp] [2 bytes buffer length] [buffer]
 //
 // 3. batching of messages per file
 //    can be its own ros2 node that will batch "old" events to a single file for long term storage!
@@ -90,6 +91,8 @@ fn start(
 ) -> ResultError<()> {
     info!("Initializing");
 
+    //TODO: check signal for new mmf
+    //TODO: how to use DmaStream or DmaFile
     let mut serial_buffer: Vec<u8> = vec![0; buffer_size];
 
     let mut signals = utils::setup_signal_handler()?;
@@ -103,8 +106,6 @@ fn start(
             SignalState::ReloadConfig => {}
             SignalState::Exit => return Ok(()),
         }
-        //TODO: check signal for new mmf
-        //TODO: how to use DmaStream or DmaFile
 
         let bytes_read =
             process_serial_data(&mut port, &mut serial_buffer, output_format)?.unwrap_or_default();
