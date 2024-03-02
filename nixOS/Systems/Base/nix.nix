@@ -1,9 +1,8 @@
-{
-  config,
-  pkgs,
-  lib,
-  user,
-  ...
+{ config
+, pkgs
+, lib
+, user
+, ...
 }: {
   boot.loader.grub.configurationLimit = 2;
   #boot.tmp.cleanOnBoot = true;
@@ -35,7 +34,7 @@
     package = pkgs.nixVersions.unstable;
     #registry.nixpkgs.flake = inputs.nixpkgs;
     extraOptions = ''
-      experimental-features = nix-command flakes repl-flake
+      experimental-features = nix-command flakes repl-flake configurable-impure-env
       keep-outputs          = true
       keep-derivations      = true
     '';

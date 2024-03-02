@@ -7,7 +7,7 @@
     ./enviornment.nix
     (./debugging)
     ./ros2.nix
-    ./docker.nix
+    # ./docker.nix
     ./Users
   ];
 
@@ -17,7 +17,7 @@
   # boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
   services.openssh = {
     enable = true;
-    settings.PasswordAuthentication = false; # disable ssh with password
+    # settings.PasswordAuthentication = false; # disable ssh with password
   };
 
   # system.stateVersion = "23.11";

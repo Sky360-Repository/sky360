@@ -1,8 +1,7 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
+{ config
+, pkgs
+, lib
+, ...
 }: {
 
   imports = [
@@ -12,9 +11,9 @@
     indi-full
   ];
 
-  nixpkgs.config.allowUnfreePredicate = pkg:
-    builtins.elem (lib.getName pkg) [
-      "qhyccd_sdk"
-    ];
-  services.udev.packages = [pkgs.qhyccd_sdk];
+  # nixpkgs.config.allowUnfreePredicate = pkg:
+  #   builtins.elem (lib.getName pkg) [
+  #     "qhyccd_sdk"
+  #   ];
+  # services.udev.packages = [pkgs.qhyccd_sdk];
 }
