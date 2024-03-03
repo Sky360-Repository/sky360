@@ -32,9 +32,8 @@
       # TODO: move to packages 
       sky360-packages-overlay = (final: prev: {
         sky360 = {
-          sky360-ros-iron-heartbeat = prev.callPackage ./ros/iron/heartbeat {
-            # inherit pkgs;
-          };
+          sky360-ros-iron-heartbeat = prev.callPackage ./ros/iron/heartbeat { };
+          qhyccd_sdk = prev.callPackage ./pkgs/qhyccd_sdk.nix { };
         };
       });
     in

@@ -2,7 +2,6 @@
 {
   environment.systemPackages = with pkgs; [
     sky360.sky360-ros-iron-heartbeat
-    # sky360.heartbeat
   ];
 
   services.ros2 = {
@@ -11,13 +10,13 @@
     domainId = 0;
 
     nodes = {
-      # heartbeat = {
-      #   package = pkgs.rosPackages.iron.sky360-ros-iron-heartbeat.pname;
-      #   node = "heartbeat";
-      # args = [];
-      # rosArgs = [];
-      # params = { };  
-      # };
+      heartbeat = {
+        package = pkgs.sky360.sky360-ros-iron-heartbeat.pname;
+        node = "heartbeat";
+        args = [ ];
+        rosArgs = [ ];
+        params = { };
+      };
       # listener = {
       #   package = pkgs.rosPackages.iron.sky360-ros-iron-heartbeat.pname;
       #   node = "listener";
