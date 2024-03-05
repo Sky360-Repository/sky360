@@ -40,4 +40,3 @@ buildRosPackage {
     license = with lib.licenses; [ mit ];
   };
 }
-

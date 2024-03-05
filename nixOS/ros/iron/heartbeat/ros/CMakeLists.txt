@@ -165,7 +165,7 @@ if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
 
-  find_package(ament_cmake_pytest REQUIRED)
+  # find_package(ament_cmake_pytest REQUIRED)
   # find_package(launch_testing_ament_cmake REQUIRED)
   find_package(rmw_implementation_cmake REQUIRED)
   # Add each test case.  Multi-executable tests can be specified in
@@ -201,16 +201,16 @@ if(BUILD_TESTING)
         list(APPEND DEMO_NODES_CPP_EXECUTABLE "$<TARGET_FILE:${executable}>")
       endforeach()
 
-      string(REPLACE ";" "_" exe_list_underscore "${tutorial_executables}")
-      configure_file(
-        test/test_executables_tutorial.py.in
-        test_${exe_list_underscore}${target_suffix}.py.configured
-        @ONLY
-      )
-      file(GENERATE
-        OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/test_${exe_list_underscore}${target_suffix}_$<CONFIG>.py"
-        INPUT "${CMAKE_CURRENT_BINARY_DIR}/test_${exe_list_underscore}${target_suffix}.py.configured"
-      )
+      # string(REPLACE ";" "_" exe_list_underscore "${tutorial_executables}")
+      # configure_file(
+      #   test/test_executables_tutorial.py.in
+      #   test_${exe_list_underscore}${target_suffix}.py.configured
+      #   @ONLY
+      # )
+      # file(GENERATE
+      #   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/test_${exe_list_underscore}${target_suffix}_$<CONFIG>.py"
+      #   INPUT "${CMAKE_CURRENT_BINARY_DIR}/test_${exe_list_underscore}${target_suffix}.py.configured"
+      # )
 
       # add_launch_test(
       #   "${CMAKE_CURRENT_BINARY_DIR}/test_${exe_list_underscore}${target_suffix}_$<CONFIG>.py"

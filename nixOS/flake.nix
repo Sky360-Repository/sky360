@@ -1,18 +1,28 @@
 {
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
-    dream2nix.url = "github:nix-community/dream2nix";
+    dream2nix = {
+      url = "github:nix-community/dream2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixos-generators = {
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # nixos-rk3588.url = "github:ryan4yin/nixos-rk3588";
-    nixos-rk3588.url = "github:realsnick/nixos-rk3588";
-    # nixos-rk3588.url = "/home/snick/Code/github/nixos-rk3588";
-
-    nix-ros-overlay.url = "github:lopsided98/nix-ros-overlay";
-    sky360-dream2nix.url = "./dream2nix";
+    nixos-rk3588 = {
+      # url = "github:ryan4yin/nixos-rk3588";
+      url = "github:realsnick/nixos-rk3588";
+      # url = "/home/snick/Code/github/nixos-rk3588";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-ros-overlay = {
+      url = "github:lopsided98/nix-ros-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    sky360-dream2nix = {
+      url = "./dream2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
     inputs @ { self
@@ -28,29 +38,65 @@
       system = "aarch64-linux";
       version = "0.3.2";
       lib = nixpkgs.lib;
+      config.allowUnfree = true;
 
-      # TODO: move to packages 
       sky360-packages-overlay = (final: prev: {
         sky360 = {
           sky360-ros-iron-heartbeat = prev.callPackage ./ros/iron/heartbeat { };
           qhyccd_sdk = prev.callPackage ./pkgs/qhyccd_sdk.nix { };
         };
       });
+
+      overlays = [
+        # nix-ros-overlay.overlays.default
+        sky360-packages-overlay
+      ];
+      pkgs = import nixpkgs {
+        inherit system;
+        inherit overlays;
+        inherit config;
+      };
+
+      # generate a cyclop system for any system (x86, arm, etc) and board (nuc, opi5, etc)
+      # 
+      cyclopSystem = system: board: {
+        "cyclop-${board}" = lib.nixosSystem {
+          inherit system;
+          inherit pkgs;
+          inherit config;
+
+          specialArgs = inputs;
+          networking.hostName = "cyclop-${board}";
+          sdImage = {
+            imageName = "sky360-cyclop-${version}-${board}";
+          };
+
+          modules = [
+            #mkIf for opi 5 
+            (nixos-rk3588 + "/modules/boards/${board}")
+            nix-ros-overlay.nixosModules.default
+            System/Base
+            System/cyclop
+            System/Base/openmct.nix
+          ];
+        };
+      };
     in
     {
 
       nixosConfigurations = {
+        cyclop-orangepi5plus = cyclopSystem system "orangepi5plus";
+
         cyclop-orange_pi_5_plus = lib.nixosSystem {
           inherit system;
           pkgs = import nixpkgs {
             inherit system;
             config.allowUnfree = true;
             overlays = [
-              nix-ros-overlay.overlays.default
+              # nix-ros-overlay.overlays.default
               sky360-packages-overlay
             ];
           };
-          # legacyPackages = self.pkgs.rosPackages;
           specialArgs = inputs;
           modules = [
             (nixos-rk3588 + "/modules/boards/orangepi5plus.nix")
@@ -75,7 +121,7 @@
             inherit system;
             config.allowUnfree = true;
             overlays = [
-              nix-ros-overlay.overlays.default
+              # nix-ros-overlay.overlays.default
               sky360-packages-overlay
             ];
           };

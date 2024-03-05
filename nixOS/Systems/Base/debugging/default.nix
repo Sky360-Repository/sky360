@@ -51,7 +51,7 @@
     pkgs.texlab
     pkgs.lua-language-server
     pkgs.marksman
-    # pkgs.python310Packages.python-lsp-server
+    # pkgs.python311Packages.python-lsp-server
     pkgs.nodePackages.vue-language-server
     pkgs.yaml-language-server
     pkgs.taplo
