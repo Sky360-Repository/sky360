@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/sky360-repository/sky360",
   "dependencies": {
-    "express": "^4.16.4",
+    "express": "^4.19.2",
     "express-ws": "^4.0.0",
     "openmct": "latest",
     "ws": "^6.1.2"
