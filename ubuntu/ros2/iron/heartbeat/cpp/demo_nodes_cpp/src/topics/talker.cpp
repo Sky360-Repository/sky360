@@ -43,7 +43,7 @@ public:
       [this]() -> void
       {
         msg_ = std::make_unique<std_msgs::msg::String>();
-        msg_->data = "Hello World: " + std::to_string(count_++);
+        msg_->data = "Heartbeat messages: " + std::to_string(count_++);
         RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", msg_->data.c_str());
         // Put the message into a queue to be processed by the middleware.
         // This call is non-blocking.
