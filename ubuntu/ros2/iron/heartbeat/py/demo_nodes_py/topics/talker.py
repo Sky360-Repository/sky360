@@ -30,7 +30,7 @@ class Talker(Node):
 
     def timer_callback(self):
         msg = String()
-        msg.data = 'PUBLISHER sending Heartbeat messages: {0}'.format(self.i)
+        msg.data = 'Heartbeat messages: {0}'.format(self.i)
         self.i += 1
         self.get_logger().info('Publishing: "{0}"'.format(msg.data))
         self.pub.publish(msg)
