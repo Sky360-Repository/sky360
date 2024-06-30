@@ -24,6 +24,6 @@
     "express": "^4.16.4",
     "express-ws": "^4.0.0",
     "openmct": "latest",
-    "ws": "^6.1.2"
+    "ws": "^6.2.3"
   }
 }
